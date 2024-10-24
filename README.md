@@ -1,0 +1,1 @@
+"# isFridayGood.com" 
