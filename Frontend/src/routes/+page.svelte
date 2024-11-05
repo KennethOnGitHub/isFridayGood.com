@@ -8,6 +8,7 @@
     }
     const userTimeZone:number = -(new Date().getTimezoneOffset() / 60);
 
+    let eventText = "EVENT NAME";
 
 </script>
 
@@ -21,11 +22,19 @@
             </ul>
         </nav>
 
-        <div class = "event-title">
-            <input type = 'text' placeholder = "EVENT NAME" bind:this={eventTitleInput}>
+        <!-- <div class = "event-title">
+            <input type = 'text' placeholder = "EVENT NAME" bind:this={eventTitleInput} on:forminput={}>
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt=''></button>
-        </div>
-     </div>
+        </div> -->
+
+        <!-- I did the below because input fields that expand to content do not work on safari or firefox yet -->
+        <span class = "event-title" role='textbox' tabindex="1" contenteditable on:focus={() => {eventText = ""}}> 
+            {eventText}
+            <img src="/edit_square.svg" alt=''>
+        </span>
+    </div>
+
+
     <div class = "calendar"></div>
     <div class = "bottom">
         <div class = "time-zone-slect">
@@ -74,7 +83,18 @@
     }
     .event-title {
         display: flex;
+        font-size: x-large;
     }
+    .event-title:focus {
+        background-color: green;
+    }
+    /* .event-title input {
+        all: unset
+    } */
+    /*
+    .event-title button{
+        all: unset
+    } */
 
     .calendar {
         border: 2px solid black;
@@ -91,6 +111,7 @@
     }
     .create-button {
         font-size: xx-large;
+        cursor: pointer;
     }
 
     .more-settings {
