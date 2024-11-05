@@ -41,9 +41,10 @@
             </select>
         </div>
         <button class = "create-button">CREATE</button>
-        <div class = "more-settings">
-            <button>More Settings</button>
-        </div>
+        <button class = "more-settings">
+            <img src=/settings.svg alt = '⚙️'>
+            <p>More Settings</p>
+        </button>
     </div>
 </div>
 
@@ -92,7 +93,8 @@
     }
 
     .more-settings {
-        background-color: black;
+        display: flex;
+        align-items: center;
     }
 </style>
 
