@@ -8,8 +8,6 @@
     }
     const userTimeZone:number = -(new Date().getTimezoneOffset() / 60);
 
-    let eventText = "EVENT NAME";
-
 </script>
 
 <div class = "page">
@@ -22,16 +20,21 @@
             </ul>
         </nav>
 
-        <!-- <div class = "event-title">
-            <input type = 'text' placeholder = "EVENT NAME" bind:this={eventTitleInput} on:forminput={}>
+        <div class = "event-title">
+            <input type = 'text' 
+            placeholder = "EVENT NAME" 
+            bind:this={eventTitleInput} 
+            on:input={() => {eventTitleInput.style.width = (eventTitleInput.value.length > 10 ? eventTitleInput.value.length + 'ch' : "10ch")}}
+            >
+            
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt=''></button>
-        </div> -->
+        </div>
 
         <!-- I did the below because input fields that expand to content do not work on safari or firefox yet -->
-        <span class = "event-title" role='textbox' tabindex="1" contenteditable on:focus={() => {eventText = ""}}> 
+        <!-- <span class = "event-title" role='textbox' tabindex="1" contenteditable on:focus={() => {eventText = ""}}> 
             {eventText}
             <img src="/edit_square.svg" alt=''>
-        </span>
+        </span> -->
     </div>
 
 
@@ -88,9 +91,10 @@
     .event-title:focus {
         background-color: green;
     }
-    /* .event-title input {
-        all: unset
-    } */
+    .event-title input {
+        box-sizing: content-box;
+        width: 10ch;
+    }
     /*
     .event-title button{
         all: unset
