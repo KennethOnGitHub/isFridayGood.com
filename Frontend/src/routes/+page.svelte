@@ -29,6 +29,7 @@
     <div class = "calendar"></div>
     <div class = "bottom">
         <div class = "time-zone-slect">
+            <img src = /globe.svg alt=🌐>
             <select name = "time zone">
                 {#each timezones as timezone}
                     {#if timezone == userTimeZone}
@@ -85,16 +86,21 @@
         align-items: center;
     }
     .time-zone-slect {
-        width: 100px;
-        background-color: green;
+        display: flex;
+        align-items: center;
     }
     .create-button {
         font-size: xx-large;
     }
 
     .more-settings {
+        all: unset;
         display: flex;
         align-items: center;
+        cursor: pointer;
+    }
+    .more-settings p {
+        text-decoration: underline;
     }
 </style>
 
