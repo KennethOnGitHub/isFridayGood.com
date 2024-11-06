@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Calendar from "$lib/calendar.svelte";
 
     let eventTitleInput: HTMLInputElement;
 
@@ -26,7 +27,7 @@
             bind:this={eventTitleInput} 
             on:input={() => {eventTitleInput.style.width = (eventTitleInput.value.length > 10 ? eventTitleInput.value.length + 'ch' : "10ch")}}
             >
-            
+
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt=''></button>
         </div>
 
@@ -38,9 +39,11 @@
     </div>
 
 
-    <div class = "calendar"></div>
+    <!-- <div class = "calendar"></div> -->
+    <Calendar />
+
     <div class = "bottom">
-        <div class = "time-zone-slect">
+        <div class = "time-zone-select">
             <img src = /globe.svg alt=🌐>
             <select name = "time zone">
                 {#each timezones as timezone}
@@ -88,17 +91,11 @@
         display: flex;
         font-size: x-large;
     }
-    .event-title:focus {
-        background-color: green;
-    }
+
     .event-title input {
         box-sizing: content-box;
         width: 10ch;
     }
-    /*
-    .event-title button{
-        all: unset
-    } */
 
     .calendar {
         border: 2px solid black;
@@ -109,7 +106,7 @@
         justify-content: space-between;
         align-items: center;
     }
-    .time-zone-slect {
+    .time-zone-select {
         display: flex;
         align-items: center;
     }

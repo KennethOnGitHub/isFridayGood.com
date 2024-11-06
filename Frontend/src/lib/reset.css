@@ -45,9 +45,4 @@
   #root, #__next {
     isolation: isolate;
   }
-
-
-  select, option {
-    font: -moz-pull-down-menu;
-  }
   
