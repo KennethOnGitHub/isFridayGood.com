@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+
     let columncount:number = $state(30);
 
     let calendar: HTMLDivElement;
@@ -26,10 +28,9 @@
     {#each {length: columncount} as _, i}
     <div class = {"calendar-column " + (i == 0 ? "calendar-column-start" : "")}>
         <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
-        
             <div>
-                {#each {length: 48} as _, i}
-                    <p class={(i % 2 == 1) ? "half-hour" : ""}>{createTimeString(i)}</p>
+                {#each {length: 48} as _, j}
+                    <p class={(j % 2 == 1) ? "half-hour" : ""}>{createTimeString(j)}</p>
                 {/each}
             </div>
         </div>
@@ -52,6 +53,7 @@
         
         display: grid;
         justify-items: center;
+        text-align: center;
     }
 
     .calendar-column-start {
@@ -68,7 +70,6 @@
         background-color: white;
         width: 100%;
         top: 0px;
-        text-align: center;
     }
 
 
