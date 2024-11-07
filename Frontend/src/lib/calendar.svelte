@@ -24,9 +24,9 @@
 
 <div class = "calendar" bind:this={calendar} onscroll={calculateColumnCount}>
     {#each {length: columncount} as _, i}
-        <div class = {"calendar-column " + (i == 0 ? "calendar-column-start" : "")}>
-            <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
-
+    <div class = {"calendar-column " + (i == 0 ? "calendar-column-start" : "")}>
+        <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
+        
             <div>
                 {#each {length: 48} as _, i}
                     <p class={(i % 2 == 1) ? "half-hour" : ""}>{createTimeString(i)}</p>
@@ -41,13 +41,14 @@
         display: flex;
         flex-direction: row;
         overflow: scroll;
-        padding: 1em;
+        margin: 1em;
     }
 
     .calendar-column {
         border-right: solid 2px;
         width: 5em;
         flex-shrink: 0;
+        height: fit-content;
         
         display: grid;
         justify-items: center;
@@ -60,6 +61,14 @@
 
     .half-hour {
         font-size:smaller;
+    }
+
+    h2 {
+        position: sticky;
+        background-color: white;
+        width: 100%;
+        top: 0px;
+        text-align: center;
     }
 
 
