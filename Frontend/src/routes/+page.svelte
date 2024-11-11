@@ -22,14 +22,14 @@
         </nav>
 
         <div class = "event-title">
-            <input type = 'text' 
-            placeholder = "EVENT NAME" 
-            bind:this={eventTitleInput} 
+            <input type = 'text'
+            placeholder = "EVENT NAME"
+            bind:this={eventTitleInput}
             on:input={() => {eventTitleInput.style.width = (eventTitleInput.value.length > 10 ? eventTitleInput.value.length + 'ch' : "10ch")}}
             >
-
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt=''></button>
         </div>
+        
 
         <!-- I did the below because input fields that expand to content do not work on safari or firefox yet -->
         <!-- <span class = "event-title" role='textbox' tabindex="1" contenteditable on:focus={() => {eventText = ""}}> 
@@ -38,13 +38,12 @@
         </span> -->
     </div>
 
-
-    <!-- <div class = "calendar"></div> -->
     <Calendar />
 
     <div class = "bottom">
         <div class = "time-zone-select">
             <img src = /globe.svg alt=🌐>
+            <p>TIME ZONE:</p>
             <select name = "time zone">
                 {#each timezones as timezone}
                     {#if timezone == userTimeZone}
@@ -74,15 +73,32 @@
     }
 
     .top {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row-reverse;
-        align-items: center;
-        justify-content: center;
+        display: grid;
+        justify-items: center;
     }
     nav {
-        
+        grid-area: nav;
     }
+    .event-title {
+        grid-area: title;
+    }
+
+    @media screen and (max-width: 1000px) {
+        .top {
+            grid-template-areas: 'nav'
+            'title';
+        }
+    }
+    @media not screen and (max-width: 1000px) {
+        .top {
+            grid-template-columns: 2fr 1fr 2fr;
+            grid-template-areas: '. title nav'
+        }
+        nav {
+            justify-self: end;
+        }
+    }
+
     ul{
         display: flex;
         list-style: none;
@@ -97,19 +113,18 @@
         width: 10ch;
     }
 
-    .calendar {
-        border: 2px solid black;
-    }
-
     .bottom {
-        display: flex;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
         justify-content: space-between;
-        align-items: center;
+        justify-items: center;
     }
     .time-zone-select {
         display: flex;
         align-items: center;
+        justify-self: start;
     }
+
     .create-button {
         font-size: xx-large;
         cursor: pointer;
@@ -120,6 +135,8 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+
+        justify-self: end;
     }
     .more-settings p {
         text-decoration: underline;

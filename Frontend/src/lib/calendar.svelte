@@ -1,15 +1,16 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-
-    let columncount:number = $state(30);
+    let columnCount:number = $state(30);
+    //30 completely a magic number, I chose this number as it should be enough to fit initially on a page
 
     let calendar: HTMLDivElement;
 
-    function calculateColumnCount() {
+    function updateColumnCount() {
+        //Checks how close the user is to the edge of the container, increases columnCount (and therefore adds more columns)
+        //when user is close to the edge
         const fromRight: number = calendar.scrollWidth - calendar.clientWidth - calendar.scrollLeft;
 
         if (fromRight < 40) {
-            columncount++;
+            columnCount++;
         }
     }
 
@@ -24,8 +25,8 @@
     }
 </script>
 
-<div class = "calendar" bind:this={calendar} onscroll={calculateColumnCount}>
-    {#each {length: columncount} as _, i}
+<div class = "calendar" bind:this={calendar} onscroll={updateColumnCount}>
+    {#each {length: columnCount} as _, i}
     <div class = {"calendar-column " + (i == 0 ? "calendar-column-start" : "")}>
         <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
             <div>
@@ -71,7 +72,5 @@
         width: 100%;
         top: 0px;
     }
-
-
 </style>
 
