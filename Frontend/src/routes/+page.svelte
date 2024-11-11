@@ -2,6 +2,7 @@
     import Calendar from "$lib/calendar.svelte";
 
     let eventTitleInput: HTMLInputElement;
+    let timeZoneSelect: HTMLSelectElement;
 
     const timezones: number[] = []
     for (let i = -12; i <= 14; i++) {
@@ -81,6 +82,24 @@
     }
     .event-title {
         grid-area: title;
+
+        display: flex;
+        font-size: x-large;
+    }
+
+    .event-title button {
+        all: unset;
+        cursor: pointer;
+    }
+
+    .event-title input {
+        border: none;
+    }
+
+    .time-zone-select select {
+        border: none;
+        background: none;
+        cursor: pointer;
     }
 
     @media screen and (max-width: 1000px) {
@@ -91,7 +110,7 @@
     }
     @media not screen and (max-width: 1000px) {
         .top {
-            grid-template-columns: 2fr 1fr 2fr;
+            grid-template-columns: 1fr 1fr 1fr;
             grid-template-areas: '. title nav'
         }
         nav {
@@ -102,10 +121,6 @@
     ul{
         display: flex;
         list-style: none;
-    }
-    .event-title {
-        display: flex;
-        font-size: x-large;
     }
 
     .event-title input {
@@ -128,6 +143,12 @@
     .create-button {
         font-size: xx-large;
         cursor: pointer;
+        filter: drop-shadow(2px 4px 1px #0000006f)
+    }
+
+    .create-button:active {
+        transform: translate(1px, 2px);
+        filter: none;
     }
 
     .more-settings {
