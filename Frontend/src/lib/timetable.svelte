@@ -4,12 +4,12 @@
     //columnCount is a reactive element as the number of columns increases as the user scrolls, therefore is must be able to
     //dynamically change and affect the DOM
 
-    let calendar: HTMLDivElement;
+    let timetable: HTMLDivElement;
 
     function updateColumnCount() {
         //Checks how close the user is to the edge of the container, increases columnCount (and therefore adds more columns)
         //when user is close to the edge
-        const fromRight:number = calendar.scrollWidth - calendar.clientWidth - calendar.scrollLeft;
+        const fromRight:number = timetable.scrollWidth - timetable.clientWidth - timetable.scrollLeft;
 
         //columnCount can only increase, this is because if the user scrolls back left I do not want columns that possibly have data
         //filled in to be deleted
@@ -18,22 +18,25 @@
         }
     }
 
-    const daysOfTheWeek:Array<string> = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
+    const daysOfTheWeek:string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
     const currentDay:number = new Date().getDay();
 
     function createTimeString(timeIndex: number) {
-        const hour:number = Math.floor(timeIndex/2)
-        const isHalfHour:boolean = (timeIndex % 2) == 1;
+        const hour:number = Math.floor(timeIndex/2);
+        const formattedHours:string = hour.toLocaleString('en-US', {minimumIntegerDigits: 2});
 
-        return `${hour.toLocaleString('en-US', {minimumIntegerDigits: 2})}:${isHalfHour ? "30" : "00"}`;
+        const isHalfHour:boolean = (timeIndex % 2) == 1;
+        const minutes:string = isHalfHour ? "30" : "00";
+
+        return `${formattedHours}:${minutes}`;
     }
 </script>
 
-<div class = "calendar" bind:this={calendar} onscroll={updateColumnCount}>
+<div class = "timetable" bind:this={timetable} onscroll={updateColumnCount}>
     <!-- Repeats code columnCount number of times. Effectively for(i = 0; i < columnCount; i++) {} -->
     {#each {length: columnCount} as _, i} 
 
-    <div class = {"calendar-column " + (i == 0 ? "calendar-column-start" : "")}>
+    <div class = {"timetable-column " + (i == 0 ? "timetable-column-start" : "")}>
         <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
             <div>
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
@@ -46,14 +49,14 @@
 </div>
 
 <style>
-    .calendar {
+    .timetable {
         display: flex;
         flex-direction: row;
         overflow: scroll;
         margin: 1em;
     }
 
-    .calendar-column {
+    .timetable-column {
         border-right: solid 2px;
         width: 5em;
         flex-shrink: 0;
@@ -64,7 +67,7 @@
         text-align: center;
     }
 
-    .calendar-column-start {
+    .timetable-column-start {
         border: solid;
         border-width: 0px 2px;
     }
