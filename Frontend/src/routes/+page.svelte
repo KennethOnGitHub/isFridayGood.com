@@ -123,6 +123,10 @@
         list-style: none;
     }
 
+    li a {
+        color: black;
+    }
+
     .event-title input {
         box-sizing: content-box;
         width: 10ch;
