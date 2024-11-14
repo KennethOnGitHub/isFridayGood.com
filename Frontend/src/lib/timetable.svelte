@@ -18,8 +18,25 @@
         }
     }
 
+    //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
+    const userLoadPageDate = new Date();
+
     const daysOfTheWeek:string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-    const currentDay:number = new Date().getDay();
+    const currentDay:number = userLoadPageDate.getDay();
+
+    function getColumnDate(dayIndex: number) {
+        //Tad inneficient since we are creating new objects, but creating one object that we then incremement day by day could lead
+        //to problems as if we are ever getting the column date out of order we will get the wrong date
+        let columnDate:Date = new Date(userLoadPageDate);
+        columnDate.setDate(columnDate.getDate() + dayIndex)
+        
+        const dateFormat: Intl.DateTimeFormatOptions = {
+            day: "numeric",
+            month: "short"
+        }
+
+        return columnDate.toLocaleString('en-GB', dateFormat)
+    }
 
     function createTimeString(timeIndex: number) {
         const hour:number = Math.floor(timeIndex/2);
@@ -29,7 +46,7 @@
         const minutes:string = isHalfHour ? "30" : "00";
 
         return `${formattedHours}:${minutes}`;
-    }
+    }    
 </script>
 
 <div class = "timetable" bind:this={timetable} onscroll={updateColumnCount}>
@@ -37,7 +54,10 @@
     {#each {length: columnCount} as _, i} 
 
     <div class = {"timetable-column " + (i == 0 ? "timetable-column-start" : "")}>
-        <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
+        <div class = column-header>
+            <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
+            <h3>{getColumnDate(i)} </h3>
+        </div>
             <div>
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
                 {#each {length: 48} as _, j}
@@ -76,12 +96,15 @@
         font-size:smaller;
     }
 
-    h2 {
+    .column-header {
         position: sticky;
         background-color: white;
-        font-weight: normal;
         width: 100%;
         top: 0px;
+    }
+
+    .column-header h2, .column-header h3 {
+        font-weight: normal;
     }
 </style>
 

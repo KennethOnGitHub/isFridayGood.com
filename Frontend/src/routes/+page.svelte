@@ -1,14 +1,40 @@
 <script lang="ts">
-    import Calendar from "$lib/calendar.svelte";
+    import Timetable from "$lib/timetable.svelte";
+    import { onMount } from "svelte";
 
     let eventTitleInput: HTMLInputElement;
-    let timeZoneSelect: HTMLSelectElement;
 
     const timezones: number[] = []
-    for (let i = -12; i <= 14; i++) {
+    const furthestAheadTimeZone = 14; //Kiribati
+    const furthestBehindTimeZone = -12 //Baker Islands, USA
+    for (let i = furthestBehindTimeZone; i <= furthestAheadTimeZone; i++) {
         timezones.push(i)
     }
-    const userTimeZone:number = -(new Date().getTimezoneOffset() / 60);
+
+    const minuteDifferenceBetweenUTCandLocal:number = new Date().getTimezoneOffset();
+    const userTimeZone:number = -(minuteDifferenceBetweenUTCandLocal / 60);
+    
+    /*We have to make it negative as Date().getTimezoneOffset returns UTC - Local.
+    This means that if local is ahead, Date().getTimezoneOffset returns a negative and if local is behind it returns a positive
+    But since timezones are written as how many hours +/- UTC/GMT, I need to make the number negative when it is behind and positive
+    when it is ahead*/
+
+    function updateTitleInput() {
+        const MAX_WIDTH_PROPORTION = 0.7;
+        const maxWidth = window.innerWidth * MAX_WIDTH_PROPORTION;
+
+        console.log(`width ${eventTitleInput.clientWidth}, max: ${maxWidth}, fontsize: ${eventTitleInput.style.fontSize}`)
+
+        if (eventTitleInput.clientWidth < maxWidth) {
+            eventTitleInput.style.width = Math.max(10, eventTitleInput.value.length) + 'ch'
+            console.log("under max")
+        }
+
+        const XLARGE_FONT_SIZE = 24;
+        eventTitleInput.style.fontSize = Math.min(XLARGE_FONT_SIZE, 36).toString() + 'px'
+    }
+
+    onMount(() => {window.addEventListener('resize', updateTitleInput)} )
 
 </script>
 
@@ -25,10 +51,13 @@
         <div class = "event-title">
             <input type = 'text'
             placeholder = "EVENT NAME"
+            maxlength="48"
             bind:this={eventTitleInput}
-            on:input={() => {eventTitleInput.style.width = (eventTitleInput.value.length > 10 ? eventTitleInput.value.length + 'ch' : "10ch")}}
+            on:input={updateTitleInput}
             >
-            <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt=''></button>
+            <!-- Scales the size of the input box to fit the event title if the title is longer than 10 chars-->
+
+            <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
         </div>
         
 
@@ -39,7 +68,7 @@
         </span> -->
     </div>
 
-    <Calendar />
+    <Timetable />
 
     <div class = "bottom">
         <div class = "time-zone-select">
@@ -110,7 +139,7 @@
     }
     @media not screen and (max-width: 1000px) {
         .top {
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 2fr 1fr;
             grid-template-areas: '. title nav'
         }
         nav {
