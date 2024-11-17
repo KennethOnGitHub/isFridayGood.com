@@ -20,18 +20,16 @@
     when it is ahead*/
 
     function updateTitleInput() {
-        const MAX_WIDTH_PROPORTION = 0.7;
-        const maxWidth = window.innerWidth * MAX_WIDTH_PROPORTION;
+        const MAX_WIDTH_PROPORTION:number = 0.7;
+        const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
 
-        console.log(`width ${eventTitleInput.clientWidth}, max: ${maxWidth}, fontsize: ${eventTitleInput.style.fontSize}`)
-
+        console.log(eventTitleInput.clientWidth, maxWidth)
         if (eventTitleInput.clientWidth < maxWidth) {
-            eventTitleInput.style.width = Math.max(10, eventTitleInput.value.length) + 'ch'
-            console.log("under max")
+            const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
+            eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';
+        }else {
+            eventTitleInput.style.fontSize = (maxWidth / eventTitleInput.value.length) + "px"
         }
-
-        const XLARGE_FONT_SIZE = 24;
-        eventTitleInput.style.fontSize = Math.min(XLARGE_FONT_SIZE, 36).toString() + 'px'
     }
 
     onMount(() => {window.addEventListener('resize', updateTitleInput)} )
