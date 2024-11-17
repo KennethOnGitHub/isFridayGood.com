@@ -5,20 +5,20 @@
 
     const STARTING_COLUMN_COUNT = 30;
     //30 completely a magic number, I chose this number as it should be enough columns to fit initially on a page
-    //columnCount is a reactive element as the number of columns increases as the user scrolls, therefore is must be able to
-    //dynamically change and affect the DOM
 
     const times = $state({
         startDate: new Date(userLoadPageDate),
         availability: new Array(STARTING_COLUMN_COUNT)
                         .fill(new Array<Boolean>(48).fill(false)),
+        //Each array is a day, each value in the array corresponds to whether that time slot was selected by the user
 
         updateTimeSlot(date: number, slot: number) {
             times.availability[date][slot] = !times.availability[date][slot];
-            console.log(times.availability)
         }
     })
     let columnCount = $derived(times.availability.length) 
+    //columnCount is a derived element as the number of columns increases as the user scrolls, therefore is must be able to
+    //dynamically change and affect the DOM
     
     function updateColumnCount() {
         //Checks how close the user is to the edge of the container, increases no of columns
@@ -73,7 +73,7 @@
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
                 {#each {length: 48} as _, j}
                     <button onpointerenter = {(event) => { if (event.pressure >= 0.5) times.updateTimeSlot(i, j)}}
-                        onmousedown = {() => times.updateTimeSlot(i, j)}
+                        onpointerdown = {() => times.updateTimeSlot(i, j)}
                     class={"time-slot" + ((j % 2 == 1) ? " half-hour" : "") + (times.availability[i][j] ? " highlighted" : "")}
                     >{createTimeString(j)}</button>
                 {/each}
