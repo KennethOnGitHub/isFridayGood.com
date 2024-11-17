@@ -1,25 +1,36 @@
 <script lang="ts">
-    let columnCount:number = $state(30);
+    const userLoadPageDate = new Date(); 
+    //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
+    let timetable: HTMLDivElement;
+
+    const STARTING_COLUMN_COUNT = 30;
     //30 completely a magic number, I chose this number as it should be enough columns to fit initially on a page
     //columnCount is a reactive element as the number of columns increases as the user scrolls, therefore is must be able to
     //dynamically change and affect the DOM
 
-    let timetable: HTMLDivElement;
+    const times = $state({
+        startDate: new Date(userLoadPageDate),
+        availability: new Array(STARTING_COLUMN_COUNT)
+                        .fill(new Array<Boolean>(48).fill(false)),
 
+        updateTimeSlot(date: number, slot: number) {
+            times.availability[date][slot] = !times.availability[date][slot];
+            console.log(times.availability)
+        }
+    })
+    let columnCount = $derived(times.availability.length) 
+    
     function updateColumnCount() {
-        //Checks how close the user is to the edge of the container, increases columnCount (and therefore adds more columns)
+        //Checks how close the user is to the edge of the container, increases no of columns
         //when user is close to the edge
         const fromRight:number = timetable.scrollWidth - timetable.clientWidth - timetable.scrollLeft;
 
-        //columnCount can only increase, this is because if the user scrolls back left I do not want columns that possibly have data
+        //no. of columns can only increase, this is because if the user scrolls back left I do not want columns that possibly have data
         //filled in to be deleted
         if (fromRight < 40) {
-            columnCount++;
+            times.availability.push(new Array<Boolean>(48).fill(false))
         }
     }
-
-    //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
-    const userLoadPageDate = new Date();
 
     const daysOfTheWeek:string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
     const currentDay:number = userLoadPageDate.getDay();
@@ -46,7 +57,7 @@
         const minutes:string = isHalfHour ? "30" : "00";
 
         return `${formattedHours}:${minutes}`;
-    }    
+    }
 </script>
 
 <div class = "timetable" bind:this={timetable} onscroll={updateColumnCount}>
@@ -61,7 +72,10 @@
             <div>
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
                 {#each {length: 48} as _, j}
-                    <p class={(j % 2 == 1) ? "half-hour" : ""}>{createTimeString(j)}</p>
+                    <button onpointerenter = {(event) => { if (event.pressure >= 0.5) times.updateTimeSlot(i, j)}}
+                        onmousedown = {() => times.updateTimeSlot(i, j)}
+                    class={"time-slot" + ((j % 2 == 1) ? " half-hour" : "") + (times.availability[i][j] ? " highlighted" : "")}
+                    >{createTimeString(j)}</button>
                 {/each}
             </div>
         </div>
@@ -92,15 +106,25 @@
         border-width: 0px 2px;
     }
 
-    .half-hour {
-        font-size:smaller;
-    }
-
     .column-header {
         position: sticky;
         background-color: white;
         width: 100%;
         top: 0px;
+    }
+
+    .time-slot {
+        width: 100%;
+        background: none;
+        border: none;
+    }
+
+    .half-hour {
+        font-size:smaller;
+    }
+
+    .highlighted {
+        background-color: #62FF00;
     }
 
     .column-header h2, .column-header h3 {

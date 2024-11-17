@@ -23,13 +23,14 @@
         const MAX_WIDTH_PROPORTION:number = 0.7;
         const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
 
-        console.log(eventTitleInput.clientWidth, maxWidth)
         if (eventTitleInput.clientWidth < maxWidth) {
             const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
-            eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';
+            eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
         }else {
             eventTitleInput.style.fontSize = (maxWidth / eventTitleInput.value.length) + "px"
         }
+        console.log( (maxWidth / eventTitleInput.value.length), eventTitleInput.value.length)
+        console.log(eventTitleInput.clientWidth, maxWidth)
     }
 
     onMount(() => {window.addEventListener('resize', updateTitleInput)} )
