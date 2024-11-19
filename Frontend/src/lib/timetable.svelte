@@ -19,7 +19,7 @@
     let columnCount = $derived(times.availability.length) 
     //columnCount is a derived element as the number of columns increases as the user scrolls, therefore is must be able to
     //dynamically change and affect the DOM
-    
+
     function updateColumnCount() {
         //Checks how close the user is to the edge of the container, increases no of columns
         //when user is close to the edge

@@ -1,8 +1,7 @@
 <script lang="ts">
     import Timetable from "$lib/timetable.svelte";
     import { onMount } from "svelte";
-
-    let eventTitleInput: HTMLInputElement;
+    import type { HTMLInputTypeAttribute } from "svelte/elements";
 
     const timezones: number[] = []
     const furthestAheadTimeZone = 14; //Kiribati
@@ -19,21 +18,25 @@
     But since timezones are written as how many hours +/- UTC/GMT, I need to make the number negative when it is behind and positive
     when it is ahead*/
 
+    let eventTitleInput:HTMLInputElement
+
     function updateTitleInput() {
         const MAX_WIDTH_PROPORTION:number = 0.7;
+        const HEIGHT_TO_WIDTH:number = 3/2;
         const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
 
-        if (eventTitleInput.clientWidth < maxWidth) {
-            const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
-            eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
-        }else {
-            eventTitleInput.style.fontSize = (maxWidth / eventTitleInput.value.length) + "px"
-        }
-        console.log( (maxWidth / eventTitleInput.value.length), eventTitleInput.value.length)
-        console.log(eventTitleInput.clientWidth, maxWidth)
+        const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
+        eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
+
+        const TITLE_DEFAULT_FONT_SIZE = 24;
+
+        eventTitleInput.style.fontSize = Math.min(TITLE_DEFAULT_FONT_SIZE, ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)) + "px" 
     }
 
-    onMount(() => {window.addEventListener('resize', updateTitleInput)} )
+    onMount(
+        () => {window.addEventListener('resize', updateTitleInput)}
+    )
+
 
 </script>
 
@@ -48,13 +51,11 @@
         </nav>
 
         <div class = "event-title">
-            <input type = 'text'
-            placeholder = "EVENT NAME"
+            <input bind:this={eventTitleInput} 
+            placeholder="EVENT NAME" 
             maxlength="48"
-            bind:this={eventTitleInput}
             on:input={updateTitleInput}
             >
-            <!-- Scales the size of the input box to fit the event title if the title is longer than 10 chars-->
 
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
         </div>
@@ -121,7 +122,7 @@
     }
 
     .event-title input {
-        border: none;
+        font-size: 24px;
     }
 
     .time-zone-select select {
