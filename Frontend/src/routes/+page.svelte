@@ -19,6 +19,7 @@
     when it is ahead*/
 
     let eventTitleInput:HTMLInputElement
+    const TITLE_DEFAULT_FONT_SIZE = 24;
 
     function updateTitleInput() {
         const MAX_WIDTH_PROPORTION:number = 0.7;
@@ -27,8 +28,6 @@
 
         const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
         eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
-
-        const TITLE_DEFAULT_FONT_SIZE = 24;
 
         eventTitleInput.style.fontSize = Math.min(TITLE_DEFAULT_FONT_SIZE, ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)) + "px" 
     }
@@ -55,17 +54,11 @@
             placeholder="EVENT NAME" 
             maxlength="48"
             on:input={updateTitleInput}
+            style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}"
             >
 
             <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
         </div>
-        
-
-        <!-- I did the below because input fields that expand to content do not work on safari or firefox yet -->
-        <!-- <span class = "event-title" role='textbox' tabindex="1" contenteditable on:focus={() => {eventText = ""}}> 
-            {eventText}
-            <img src="/edit_square.svg" alt=''>
-        </span> -->
     </div>
 
     <Timetable />
@@ -122,7 +115,7 @@
     }
 
     .event-title input {
-        font-size: 24px;
+        font-size: var(--title-default-font-size);
     }
 
     .time-zone-select select {
