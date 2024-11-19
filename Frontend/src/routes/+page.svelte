@@ -1,7 +1,6 @@
 <script lang="ts">
     import Timetable from "$lib/timetable.svelte";
     import { onMount } from "svelte";
-    import type { HTMLInputTypeAttribute } from "svelte/elements";
 
     const timezones: number[] = []
     const furthestAheadTimeZone = 14; //Kiribati
@@ -18,7 +17,7 @@
     But since timezones are written as how many hours +/- UTC/GMT, I need to make the number negative when it is behind and positive
     when it is ahead*/
 
-    let eventTitleInput:HTMLInputElement
+    let eventTitleInput:HTMLInputElement;
     const TITLE_DEFAULT_FONT_SIZE = 24;
 
     function updateTitleInput() {
@@ -29,7 +28,9 @@
         const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
         eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
 
-        eventTitleInput.style.fontSize = Math.min(TITLE_DEFAULT_FONT_SIZE, ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)) + "px" 
+        const fontPerfectFitSize = ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)
+
+        eventTitleInput.style.fontSize = Math.min(TITLE_DEFAULT_FONT_SIZE, fontPerfectFitSize) + "px";
     }
 
     onMount(
@@ -78,7 +79,7 @@
                 {/each}
             </select>
         </div>
-        <button class = "create-button">CREATE</button>
+        <button type="submit" class = "create-button">CREATE</button>
         <button class = "more-settings">
             <img src=/settings.svg alt = '⚙️'>
             <p>More Settings</p>
