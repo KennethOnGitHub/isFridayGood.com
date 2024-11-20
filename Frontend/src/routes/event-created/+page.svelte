@@ -30,6 +30,7 @@
         }
 
         copiedNotifs.push(newNotif)
+        // setTimeout(() => {copiedNotifs.shift()}, 900 )
     }
 </script>
 
@@ -40,7 +41,7 @@
         <p>isFridayGood.com/[slug]</p><img alt='📋' src="/copy.svg"> 
     </button>
     {#each copiedNotifs as copiedNotif}
-        <p class = copied-notif style="top: {copiedNotif.start.y}px; left: {copiedNotif.start.x}px">Copied!</p>
+        <p class = copied-notif style="top: {copiedNotif.start.y}px; left: {copiedNotif.start.x}px ">Copied!</p>
     {/each}
 </div>
 
@@ -66,7 +67,20 @@
         text-decoration: underline;
     }
 
+    @keyframes slideUp{
+    from {
+        transform: translateY(0%);
+        opacity: 100%;
+    }
+    to {
+        transform: translateY(-50vh);
+        opacity: 0%;
+    }
+    }
     .copied-notif {
         position: absolute;
+        opacity: 0%;
+        animation: slideUp 1s;
+        animation-fill-mode: forwards;
     }
 </style>
