@@ -1,5 +1,10 @@
 <script lang="ts">
 
+    const shareURL = "isFridaygood.com/test123";
+
+    const eventTitle = "TestTitle"
+    
+
     let linkContainer:HTMLButtonElement;
 
     interface screenCoords {
@@ -16,7 +21,7 @@
     $inspect(copiedNotifs);
 
     function handleLinkClick() {
-        navigator.clipboard.writeText("TEST")
+        navigator.clipboard.writeText(shareURL).catch((error) => {window.alert(error.message)})
 
         const deviation_x = linkContainer.clientWidth * Math.random();
         const deviation_y = linkContainer.clientHeight * Math.random();
@@ -36,10 +41,23 @@
 
 <div class="page">
     <h1>EVENT CREATED!</h1>
-    <h2>Send this link to invite your friends!</h2>
-    <button class = link-container onclick={handleLinkClick} bind:this={linkContainer}>
-        <p>isFridayGood.com/[slug]</p><img alt='📋' src="/copy.svg"> 
+    <p>Send this link to invite your friends!</p>
+    <button class = link-container onpointerdown={handleLinkClick} bind:this={linkContainer}>
+        <p>{shareURL}</p><img alt='📋' src="/copy.svg"> 
     </button>
+    <button class = "share" onclick={() => {
+        navigator.share({
+            title: "Share Invite", 
+            text: "I'm inviting you to " + eventTitle + "!", 
+            url: "https://" + shareURL})}}>
+        <img alt = "test" src='/share.svg'>
+        <p>Share</p>
+    </button>
+
+    <a href={shareURL} class = view-results>
+        View Results
+    </a>
+
     {#each copiedNotifs as copiedNotif}
         <p class = copied-notif style="top: {copiedNotif.start.y}px; left: {copiedNotif.start.x}px ">Copied!</p>
     {/each}
@@ -52,6 +70,11 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        gap: 1em;
+    }
+
+    h1 {
+        font-weight: normal;
     }
 
     .link-container {
@@ -59,12 +82,27 @@
         cursor: pointer;
         display: flex;
         border-radius: 2px;
-        padding: 0.1em;
+        padding: 0.2em;
         background-color: lightgrey;
+        color: #2400ee;
 
-        border: darkgrey;
+        border: 1px solid black;
 
         text-decoration: underline;
+    }
+
+    .share {
+        all:unset;
+
+        cursor: pointer;
+        display: flex;
+        gap: 0.3em;
+    }
+
+    .view-results {
+        text-decoration: underline;
+        margin-top: 10em;
+        color: black;
     }
 
     @keyframes slideUp{

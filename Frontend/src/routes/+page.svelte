@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import Timetable from "$lib/timetable.svelte";
     import { onMount } from "svelte";
 
@@ -54,11 +55,11 @@
             <input bind:this={eventTitleInput} 
             placeholder="EVENT NAME" 
             maxlength="48"
-            on:input={updateTitleInput}
+            oninput={updateTitleInput}
             style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}"
             >
 
-            <button on:click={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
+            <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
         </div>
     </div>
 
@@ -79,7 +80,7 @@
                 {/each}
             </select>
         </div>
-        <button type="submit" class = "create-button">CREATE</button>
+        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">CREATE</button>
         <button class = "more-settings">
             <img src=/settings.svg alt = '⚙️'>
             <p>More Settings</p>
