@@ -12,13 +12,8 @@
         y:number;
     }
 
-    interface notifData {
-        start: screenCoords,
-        end: screenCoords,
-    }
-
-    let copiedNotifs:notifData[] = $state([]);
-    $inspect(copiedNotifs);
+    let copiedNotifsPositions:screenCoords[] = $state([]);
+    $inspect(copiedNotifsPositions);
 
     function handleLinkClick() {
         navigator.clipboard.writeText(shareURL).catch((error) => {window.alert(error.message)})
@@ -26,16 +21,12 @@
         const deviation_x = linkContainer.clientWidth * Math.random();
         const deviation_y = linkContainer.clientHeight * Math.random();
 
-        const startPos:screenCoords = {x: linkContainer.offsetLeft + deviation_x, y: linkContainer.offsetTop + deviation_y};
-        const endPos:screenCoords = {x: 0, y: 0}
+        const startPos:screenCoords = {
+            x: linkContainer.offsetLeft + deviation_x, 
+            y: linkContainer.offsetTop + deviation_y
+        };
 
-        const newNotif: notifData = {
-            start: startPos,
-            end: endPos,
-        }
-
-        copiedNotifs.push(newNotif)
-        // setTimeout(() => {copiedNotifs.shift()}, 900 )
+        copiedNotifsPositions.push(startPos)
     }
 </script>
 
@@ -58,8 +49,8 @@
         View Results
     </a>
 
-    {#each copiedNotifs as copiedNotif}
-        <p class = copied-notif style="top: {copiedNotif.start.y}px; left: {copiedNotif.start.x}px ">Copied!</p>
+    {#each copiedNotifsPositions as position}
+        <p class = copied-notif style="top: {position.y}px; left: {position.x}px ">Copied!</p>
     {/each}
 </div>
 
