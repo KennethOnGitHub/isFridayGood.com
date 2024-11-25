@@ -15,8 +15,12 @@
     let copiedNotifsPositions:screenCoords[] = $state([]);
     $inspect(copiedNotifsPositions);
 
-    function handleLinkClick() {
-        navigator.clipboard.writeText(shareURL).catch((error) => {window.alert(error.message)})
+    async function handleLinkClick() {
+        try {
+            await navigator.clipboard.writeText(shareURL);
+        } catch (e) {
+            window.alert(e);
+        }
 
         const deviation_x = linkContainer.clientWidth * Math.random();
         const deviation_y = linkContainer.clientHeight * Math.random();
@@ -33,7 +37,7 @@
 <div class="page">
     <h1>EVENT CREATED!</h1>
     <p>Send this link to invite your friends!</p>
-    <button class = link-container onpointerdown={handleLinkClick} bind:this={linkContainer}>
+    <button class = link-container onclick={handleLinkClick} bind:this={linkContainer}>
         <p>{shareURL}</p><img alt='📋' src="/copy.svg"> 
     </button>
     <button class = "share" onclick={() => {
