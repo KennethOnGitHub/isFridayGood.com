@@ -69,7 +69,7 @@
             <h2>{daysOfTheWeek[(currentDay + i) % 7]}</h2>
             <h3>{getColumnDate(i)} </h3>
         </div>
-            <div>
+            <div class = "times">
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
                 {#each {length: 48} as _, j}
                     <button onpointerenter = {(event) => { if (event.pressure >= 0.5) times.updateTimeSlot(i, j)}}
@@ -111,6 +111,12 @@
         background-color: white;
         width: 100%;
         top: 0px;
+    }
+
+    .times {
+        display: grid;
+        width: 100%;
+        /* flex-direction: column; */
     }
 
     .time-slot {
