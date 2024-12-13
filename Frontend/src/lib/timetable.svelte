@@ -1,22 +1,16 @@
 <script lang="ts">
+    import type { Manager } from "./managers.svelte";
+
     const userLoadPageDate = new Date(); 
     //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
     let timetable: HTMLDivElement;
 
+    let { manager }: {manager: Manager} = $props();
+
     const STARTING_COLUMN_COUNT = 30;
     //30 completely a magic number, I chose this number as it should be enough columns to fit initially on a page
 
-    const times = $state({
-        startDate: new Date(userLoadPageDate),
-        availability: new Array(STARTING_COLUMN_COUNT)
-                        .fill(new Array<Boolean>(48).fill(false)),
-        //Each array is a day, each value in the array corresponds to whether that time slot was selected by the user
-
-        updateTimeSlot(date: number, slot: number) {
-            times.availability[date][slot] = !times.availability[date][slot];
-        }
-    })
-    let columnCount = $derived(times.availability.length) 
+    let columnCount = $state(STARTING_COLUMN_COUNT) 
     //columnCount is a derived element as the number of columns increases as the user scrolls, therefore is must be able to
     //dynamically change and affect the DOM
 
@@ -28,7 +22,7 @@
         //no. of columns can only increase, this is because if the user scrolls back left I do not want columns that possibly have data
         //filled in to be deleted
         if (fromRight < 40) {
-            times.availability.push(new Array<Boolean>(48).fill(false))
+            columnCount++;
         }
     }
 
@@ -72,15 +66,18 @@
             <div class = "times">
                 <!-- Repeats 48 times as there are 24 hours in a day and there is a half hour for each hour -->
                 {#each {length: 48} as _, j}
-                    <button onpointerenter = {(event) => { if (event.pressure >= 0.5) times.updateTimeSlot(i, j)}}
-                        onpointerdown = {() => times.updateTimeSlot(i, j)}
-                    class={"time-slot" + ((j % 2 == 1) ? " half-hour" : "") + (times.availability[i][j] ? " highlighted" : "")}
+                    <button onpointerenter = {(event) => { manager.highlighter.handlePointerEnter(i, j, event)}}
+                        onpointerdown = {() => manager.highlighter.handleClick(i, j)}
+                    style={manager.highlighter.getSlotStyle(i, j)}
+
+                    class={"time-slot" + (j % 2 == 1? " half-hour" : "")}
+
                     >{createTimeString(j)}</button>
                 {/each}
             </div>
         </div>
     {/each}
-</div>
+</div> 
 
 <style>
     .timetable {
@@ -127,10 +124,6 @@
 
     .half-hour {
         font-size:smaller;
-    }
-
-    .highlighted {
-        background-color: #62FF00;
     }
 
     .column-header h2, .column-header h3 {

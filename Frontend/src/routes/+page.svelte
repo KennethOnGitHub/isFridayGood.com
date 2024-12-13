@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
+    import { eventCreationManager } from "$lib/managers.svelte";
     import Timetable from "$lib/timetable.svelte";
     import { onMount } from "svelte";
 
@@ -9,15 +9,7 @@
     for (let i = furthestBehindTimeZone; i <= furthestAheadTimeZone; i++) {
         timezones.push(i)
     }
-
-    const minuteDifferenceBetweenUTCandLocal:number = new Date().getTimezoneOffset();
-    const userTimeZone:number = -(minuteDifferenceBetweenUTCandLocal / 60);
     
-    /*We have to make it negative as Date().getTimezoneOffset returns UTC - Local.
-    This means that if local is ahead, Date().getTimezoneOffset returns a negative and if local is behind it returns a positive
-    But since timezones are written as how many hours +/- UTC/GMT, I need to make the number negative when it is behind and positive
-    when it is ahead*/
-
     let eventTitleInput:HTMLInputElement;
     const TITLE_DEFAULT_FONT_SIZE = 24;
 
@@ -63,7 +55,7 @@
         </div>
     </div>
 
-    <Timetable />
+    <Timetable manager = {eventCreationManager}/>
 
     <div class = "bottom">
         <div class = "time-zone-select">
@@ -71,7 +63,7 @@
             <p>TIME ZONE:</p>
             <select name = "time zone">
                 {#each timezones as timezone}
-                    {#if timezone == userTimeZone}
+                    {#if timezone == eventCreationManager.timezone}
                         <option value = {timezone} selected>{`GMT${timezone >= 0 ? '+' : ''}${timezone}`}</option>
                     {:else}
                         <option value = {timezone}>{`GMT${timezone >= 0 ? '+' : ''}${timezone}`}</option>
