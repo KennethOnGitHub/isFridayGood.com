@@ -231,6 +231,7 @@ class ResultsHighlighter implements Highlighter {
             else if (ratio > 0){
                 style += "background-color: #FFAA00" 
             }
+        // @ts-ignore need this as TS does not realise that selectedRespondent is defined
         }else if(this.availabilityData.availabilities[column][row].includes(this.selectedRespondentID)) {
             style += `background-color: ${settings.GREEN}`;
         }
