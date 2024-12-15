@@ -1,0 +1,1 @@
+export let GREEN = "#62FF00";

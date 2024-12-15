@@ -1,30 +1,7 @@
 <script lang="ts">
-    import { eventCreationManager } from "$lib/managers.svelte";
+    import { createResponseManager } from "$lib/managers.svelte";
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
-    import { onMount } from "svelte";
-    
-    let eventTitleInput:HTMLInputElement;
-    const TITLE_DEFAULT_FONT_SIZE = 24;
-
-    function updateTitleInput() {
-        const MAX_WIDTH_PROPORTION:number = 0.7;
-        const HEIGHT_TO_WIDTH:number = 3/2;
-        const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
-
-        const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
-        eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
-
-        const fontPerfectFitSize = ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)
-
-        eventTitleInput.style.fontSize = Math.min(TITLE_DEFAULT_FONT_SIZE, fontPerfectFitSize) + "px";
-    }
-
-    onMount(
-        () => {window.addEventListener('resize', updateTitleInput)}
-    )
-
-
 </script>
 
 <div class = "page">
@@ -33,30 +10,26 @@
             <ul>
                 <li><a href="">View Results</a></li>
                 |
-                <li><a href="">Respond to an invite</a></li>
+                <li><a href="">Edit this Event</a></li>
             </ul>
         </nav>
 
         <div class = "event-title">
-            <input bind:this={eventTitleInput} 
-            placeholder="EVENT NAME" 
-            maxlength="48"
-            oninput={updateTitleInput}
-            style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}"
-            >
-
-            <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
+            <p class="subtitle">You've been invited to...</p>
+            <p>{createResponseManager.eventTitle}</p> 
+            <!-- TODO: make it resize^^^^^^ -->
         </div>
     </div>
 
-    <Timetable manager = {eventCreationManager}/>
+    <Timetable manager = {createResponseManager}/>
 
     <div class = "bottom">
-        <TimezoneSelect bind:userTimezone = {eventCreationManager.timezone} />
-        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">CREATE</button>
+        <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />
+        <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">SUBMIT</button>
+        
         <button class = "more-settings">
-            <img src=/settings.svg alt = '⚙️'>
-            <p>More Settings</p>
+            <img src=/edit_square.svg alt = '✏️'>
+            <p>Edit Submission</p>
         </button>
     </div>
 </div>
@@ -81,16 +54,13 @@
         grid-area: title;
 
         display: flex;
+        flex-direction: column;
+        align-items: center;
         font-size: x-large;
     }
 
-    .event-title button {
-        all: unset;
-        cursor: pointer;
-    }
-
-    .event-title input {
-        font-size: var(--title-default-font-size);
+    .subtitle {
+        font-size: medium;
     }
 
     @media screen and (max-width: 1000px) {
@@ -116,11 +86,6 @@
 
     li a {
         color: black;
-    }
-
-    .event-title input {
-        box-sizing: content-box;
-        width: 10ch;
     }
 
     .bottom {

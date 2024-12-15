@@ -3,6 +3,8 @@
 <script>
     import '$lib/reset.css'
     import '$lib/global.css'
+
+    let { children } = $props()
 </script>
 
-<slot></slot>
+{@render children()}

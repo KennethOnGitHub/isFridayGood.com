@@ -40,7 +40,7 @@
             month: "short"
         }
 
-        return columnDate.toLocaleString('en-GB', dateFormat)
+        return columnDate.toLocaleString('en-US', dateFormat)
     }
 
     function createTimeString(timeIndex: number) {
@@ -108,6 +108,7 @@
         background-color: white;
         width: 100%;
         top: 0px;
+        z-index: 1;
     }
 
     .times {
