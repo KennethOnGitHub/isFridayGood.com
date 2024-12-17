@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { EventCreationManager } from "$lib/managers.svelte";
-    const eventCreationManager = new EventCreationManager();
+    import { EditEventManager } from "$lib/managers.svelte";
+    const editEventManager = new EditEventManager("testCode123");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
     import { onMount } from "svelte";
@@ -13,8 +13,8 @@
         const HEIGHT_TO_WIDTH:number = 3/2;
         const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
 
-        const PLACE_HOLDER_LENGTH:number = "EVENT NAME".length;
-        eventTitleInput.style.width = Math.max(PLACE_HOLDER_LENGTH, eventTitleInput.value.length) + 'ch';  
+        const placeHolderLength:number = editEventManager.eventTitle.length;
+        eventTitleInput.style.width = Math.max(placeHolderLength, eventTitleInput.value.length) + 'ch';  
 
         const fontPerfectFitSize = ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)
 
@@ -38,27 +38,23 @@
             </ul>
         </nav>
 
-        <div class = "top-middle">
-            <div class = "event-title">
-                <input bind:this={eventTitleInput} 
-                placeholder="EVENT NAME" 
-                maxlength="48"
-                oninput={updateTitleInput}
-                style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}"
-                >
-    
-                <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
-            </div>
+        <div class = "event-title">
+            <input bind:this={eventTitleInput} 
+            placeholder={editEventManager.eventTitle} 
+            maxlength="48"
+            oninput={updateTitleInput}
+            style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}; --starting-width: {editEventManager.eventTitle.length}ch"
+            >
 
-            <p class = instruction-text>Click on when <span style="text-decoration: underline; font-weight: bold;">you</span> are free!</p>
+            <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
         </div>
     </div>
 
-    <Timetable manager = {eventCreationManager}/>
+    <Timetable manager = {editEventManager}/>
 
     <div class = "bottom">
-        <TimezoneSelect bind:userTimezone = {eventCreationManager.timezone} />
-        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">CREATE</button>
+        <TimezoneSelect bind:userTimezone = {editEventManager.timezone} />
+        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">SUBMIT</button>
         <button class = "more-settings">
             <img src=/settings.svg alt = '⚙️'>
             <p>More Settings</p>
@@ -70,7 +66,7 @@
     div.page {
         padding: 1rem; 
         display: grid;
-        grid-template-rows: 70px 1fr 60px;
+        grid-template-rows: 60px 1fr 60px;
 
         height: 100vh;
     }
@@ -82,29 +78,21 @@
     nav {
         grid-area: nav;
     }
-
-    .top-middle {
-        grid-area: title;
-
-        display: grid;
-        justify-items: center;
-    }
     .event-title {
+        grid-area: title;
         display: flex;
         font-size: x-large;
+    }
+
+    .event-title input {
+        box-sizing: content-box;
+        width: var(--starting-width);
+        font-size: var(--title-default-font-size);
     }
 
     .event-title button {
         all: unset;
         cursor: pointer;
-    }
-
-    .event-title input {
-        font-size: var(--title-default-font-size);
-    }
-
-    .instruction-text {
-        font-size:medium;
     }
 
     @media screen and (max-width: 1000px) {
@@ -130,11 +118,6 @@
 
     li a {
         color: black;
-    }
-
-    .event-title input {
-        box-sizing: content-box;
-        width: 10ch;
     }
 
     .bottom {

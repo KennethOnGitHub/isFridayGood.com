@@ -12,7 +12,7 @@ interface Highlighter {
     handleClick(column: number, row: number): void
 }
 
-class EventCreationManager implements Manager{
+export class EventCreationManager implements Manager{
     timezone: number;
     eventTitle: string;
     highlighter: Highlighter;
@@ -27,6 +27,28 @@ class EventCreationManager implements Manager{
     submitEvent() {
         console.log("You haven't implemented this dumbfuck")
         const test = 0/0;
+    }
+}
+
+export class EditEventManager implements Manager{
+    timezone: number;
+    eventTitle: string;
+    highlighter: Highlighter;
+    inviteCode: string;
+
+    constructor(inviteCode: string) {
+        //query database
+
+        this.timezone = 0;
+        this.eventTitle = "SAMS EPIC TEA PARTY";
+        this.inviteCode = inviteCode;
+
+        this.highlighter = new HostHighlighter();
+    }
+
+    editEvent() {
+        //send request
+        console.log("afiashfiashfiashfa")
     }
 }
 
@@ -69,16 +91,16 @@ class HostHighlighter implements Highlighter {
     }
 }
 
-class CreateResponseManager implements Manager{
+export class CreateResponseManager implements Manager{
     timezone: number;
     eventTitle: string;
     highlighter: Highlighter;
     inviteCode: string;
 
-    constructor() {
+    constructor(inviteCode: string) {
         this.timezone = 0;
         this.eventTitle = "Christmas Dinner at the Newman Household :D";
-        this.inviteCode = "test123";
+        this.inviteCode = inviteCode;
         
         this.highlighter = new AttendeeHighlighter();
     }
@@ -86,8 +108,28 @@ class CreateResponseManager implements Manager{
     submitResponse() {
         console.log("you haven't implemented this ken!!!")
     }
+}
 
+export class EditResponseManager implements Manager {
+    timezone: number;
+    eventTitle: string;
+    highlighter: Highlighter;
+    inviteCode: string;
+    userName: string;
 
+    constructor(inviteCode: string, userName: string) {
+        //send query
+        this.timezone = 0; 
+        this.eventTitle = "Test title";
+        this.inviteCode = inviteCode;
+        this.userName = userName;
+
+        this.highlighter = new AttendeeHighlighter();
+    }
+
+    submitEdit() {
+
+    }
 }
 
 class AttendeeHighlighter implements Highlighter {
@@ -139,16 +181,16 @@ class AttendeeHighlighter implements Highlighter {
     } 
 }
 
-class ViewResultsManager implements Manager {
+export class ViewResultsManager implements Manager {
     timezone: number;
     eventTitle: string;
     highlighter: ResultsHighlighter;//<-could do this for others?
     inviteCode: string;
 
-    constructor() {
+    constructor(inviteCode: string) {
         this.timezone = 0; //PLACEHOLDER
         this.eventTitle = "Christmas Dinner at the Newman Household :D",
-        this.inviteCode = "test123";
+        this.inviteCode = inviteCode;
 
         this.highlighter = new ResultsHighlighter()
     }
@@ -167,7 +209,7 @@ class ResultsHighlighter implements Highlighter {
         respondents: ["Simon", "Hamish", "Sammy"],
     });
     selectedRespondentID?: number = $state(undefined);
-    bookedTime: {column: number, row: number} = $state({column: 0, row: 0});
+    confirmedTime: {column: number, row: number} = $state({column: 0, row: 0});
     availableAttendees: number[] = $state([])
 
 
@@ -188,28 +230,8 @@ class ResultsHighlighter implements Highlighter {
     }
 
     getSlotStyle(column: number, row: number): string {
-        // if (column >= this.availabilityData.availabilities.length) return "";
-        // if (this.availabilityData.respondents.length == 0) return "";
-        
-        // if (this.selectedRespondentID == undefined) {
-        //     const ratio = this.availabilityData.availabilities[column][row].length / this.availabilityData.respondents.length
-        //     if (ratio == 1) {
-        //         return `background-color: ${settings.GREEN}`;
-        //     }else if (ratio >= 0.5) {
-        //         return "background-color: #FFFF00"
-        //     }
-        //     else if (ratio > 0){
-        //         return "background-color: #FFAA00" 
-        //     }
-        //     else {
-        //         return "";
-        //     }
-        // }else {
-        //     return this.availabilityData.availabilities[column][row].includes(this.selectedRespondentID) ? `background-color: ${settings.GREEN}` : "";
-        // }
         let style = "";
-        if (this.bookedTime.column == column && this.bookedTime.row == row) {
-            // style += "border: 2px solid black;"
+        if (this.confirmedTime.column == column && this.confirmedTime.row == row) {
             style += "text-decoration: underline; font-weight: bold;"
         }
 
@@ -221,17 +243,16 @@ class ResultsHighlighter implements Highlighter {
 
         const notFilteringResponses:boolean = (this.selectedRespondentID == undefined) 
         if (notFilteringResponses) {
-
-            const ratio = this.availabilityData.availabilities[column][row].length / this.availabilityData.respondents.length
+            const ratio = this.availabilityData.availabilities[column][row].length / this.availabilityData.respondents.length;
             if (ratio == 1) {
                 style += `background-color: ${settings.GREEN}`;
             }else if (ratio >= 0.5) {
-                style += "background-color: #FFFF00"
+                style += `background-color: ${settings.YELLOW}`;
             }
             else if (ratio > 0){
-                style += "background-color: #FFAA00" 
+                style += `background-color: ${settings.ORANGE}`;
             }
-        // @ts-ignore need this as TS does not realise that selectedRespondent is defined
+        // @ts-ignore <- need this as TS does not realise that selectedRespondent is defined
         }else if(this.availabilityData.availabilities[column][row].includes(this.selectedRespondentID)) {
             style += `background-color: ${settings.GREEN}`;
         }
@@ -239,20 +260,16 @@ class ResultsHighlighter implements Highlighter {
     }
 
     handleClick(column: number, row: number): void {
-        this.bookedTime = {column, row}
+        this.confirmedTime = {column, row}
     }
 
     handlePointerEnter(column: number, row: number, event: PointerEvent): void {
         if (column >= this.availabilityData.availabilities.length) {
             this.availableAttendees = [];  
-              
+                
         }else {
             this.availableAttendees = this.availabilityData.availabilities[column][row];
         }
     }
 
 }
-
-export const eventCreationManager = new EventCreationManager;
-export const createResponseManager = new CreateResponseManager;
-export const viewResultsManager = new ViewResultsManager;

@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { CreateResponseManager } from "$lib/managers.svelte";
-    const createResponseManager = new CreateResponseManager("code123") 
+    import { EditResponseManager } from "$lib/managers.svelte";
+    const editResponseManager = new EditResponseManager("testcode123", "Hamish Lindsay");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
 </script>
@@ -17,15 +17,15 @@
 
         <div class = "event-title">
             <p class="subtitle">You've been invited to...</p>
-            <p>{createResponseManager.eventTitle}</p> 
+            <p>{editResponseManager.eventTitle}</p> 
             <!-- TODO: make it resize^^^^^^ -->
         </div>
     </div>
 
-    <Timetable manager = {createResponseManager}/>
+    <Timetable manager = {editResponseManager}/>
 
     <div class = "bottom">
-        <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />
+        <TimezoneSelect bind:userTimezone = {editResponseManager.timezone} />
         <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">SUBMIT</button>
         
         <button class = "more-settings">

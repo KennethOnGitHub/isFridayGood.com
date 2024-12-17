@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { viewResultsManager } from "$lib/managers.svelte";
+    import { ViewResultsManager } from "$lib/managers.svelte";
+    const viewResultsManager = new ViewResultsManager("assjfasijfaisghia");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
     import * as settings from "$lib/settings"
@@ -40,7 +41,7 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {viewResultsManager.timezone} />
-        <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">Book Time</button>
+        <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">CONFIRM</button>
         
         <button class = "more-settings">
             <img src=/edit_square.svg alt = '✏️'>
