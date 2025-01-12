@@ -3,7 +3,9 @@ interface availability {
     end: Date,
 }
 
-function TableFormToDatabaseForm(timeTable: boolean[][], firstDate: Date):availability[]  {
+export function tableFormToDatabaseForm(timeTable: boolean[][], firstDate: Date):availability[]  {
+    console.log(`firstdate: ${firstDate}`)
+
     const MILLISECONDS_IN_SECOND = 1000
     const SECONDS_PER_MINUTE = 60
     const MILLISECONDS_PER_TIME_SLOT = 30 * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND

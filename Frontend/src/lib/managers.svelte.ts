@@ -15,7 +15,7 @@ interface Highlighter {
 export class EventCreationManager implements Manager{
     timezone: number;
     eventTitle: string;
-    highlighter: Highlighter;
+    highlighter: HostHighlighter;
 
     constructor() {
         this.timezone = 0;
@@ -24,9 +24,17 @@ export class EventCreationManager implements Manager{
         this.highlighter = new HostHighlighter();
     }
 
-    submitEvent() {
-        console.log("You haven't implemented this dumbfuck")
-        const test = 0/0;
+    async submitEvent(){
+
+        const response:Response = await fetch("/api/events" , {
+            method: 'POST',
+            body: JSON.stringify({ 
+                title: this.eventTitle,
+                availability: this.highlighter.availabilityData.availability,
+                firstDate: this.highlighter.availabilityData.firstDate.toISOString() //Converting to ISO String accounts for timezones
+             })
+        })
+
     }
 }
 

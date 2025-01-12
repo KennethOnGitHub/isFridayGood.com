@@ -58,7 +58,11 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {eventCreationManager.timezone} />
-        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">CREATE</button>
+        <button onclick={ async () => {
+            eventCreationManager.submitEvent()
+        }} 
+        type="submit" 
+        class = "create-button">CREATE</button>
         <button class = "more-settings">
             <img src=/settings.svg alt = '⚙️'>
             <p>More Settings</p>
