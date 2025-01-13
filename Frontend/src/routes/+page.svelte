@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { EventCreationManager } from "$lib/managers.svelte";
     const eventCreationManager = new EventCreationManager();
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
+    import { json } from "@sveltejs/kit";
     import { onMount } from "svelte";
     
     let eventTitleInput:HTMLInputElement;
@@ -59,7 +61,14 @@
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {eventCreationManager.timezone} />
         <button onclick={ async () => {
-            eventCreationManager.submitEvent()
+            const response = await eventCreationManager.submitEvent();
+
+            if (response.ok) {
+                const { eventCode } = await response.json()
+                goto(`./event-created/${eventCode}`)
+            }else {
+                window.alert("Error: Failed to Create Event!")
+            }
         }} 
         type="submit" 
         class = "create-button">CREATE</button>

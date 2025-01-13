@@ -32,3 +32,12 @@ export function tableFormToDatabaseForm(timeTable: boolean[][], firstDate: Date)
     return availabilities
 }
 
+export async function addUserResponse(userName: string, event_code: string, availabilities: availability[]) {
+    const createUserQuery = `
+        INSERT INTO users ()
+    
+    `
+
+
+}
+

@@ -22,9 +22,10 @@ export class EventCreationManager implements Manager{
         this.eventTitle = "";
 
         this.highlighter = new HostHighlighter();
+        this.highlighter.availabilityData.firstDate.setHours(0, 0, 0, 0); //bit ugly. firstDate should probably not be part of availabilityData but the benefit of the refactor is not worth it.
     }
 
-    async submitEvent(){
+    async submitEvent(): Promise<Response>{
 
         const response:Response = await fetch("/api/events" , {
             method: 'POST',
@@ -32,9 +33,10 @@ export class EventCreationManager implements Manager{
                 title: this.eventTitle,
                 availability: this.highlighter.availabilityData.availability,
                 firstDate: this.highlighter.availabilityData.firstDate.toISOString() //Converting to ISO String accounts for timezones
-             })
+                })
         })
 
+        return response
     }
 }
 
