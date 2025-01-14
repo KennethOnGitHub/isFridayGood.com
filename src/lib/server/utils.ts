@@ -1,4 +1,6 @@
-interface availability {
+import { sql } from "../../db.server"
+
+export interface availability {
     start: Date,
     end: Date,
 }
@@ -32,12 +34,41 @@ export function tableFormToDatabaseForm(timeTable: boolean[][], firstDate: Date)
     return availabilities
 }
 
-export async function addUserResponse(userName: string, event_code: string, availabilities: availability[]) {
-    const createUserQuery = `
-        INSERT INTO users ()
-    
+export async function addUserToEvent(eventCode: string, userName: string, availabilities: availability[]) {
+
+    const presenceCheckQuery = await sql`
+    SELECT EXISTS (
+        SELECT 1
+        FROM users
+        WHERE event_code = ${ eventCode } AND user_name = ${ userName }
+        );`
+
+    const { exists } = presenceCheckQuery[0]
+    if (exists) {
+        throw Error("User with that name already Exists!")
+    }
+
+
+    const userCountQuery = await sql`
+    SELECT COUNT(*)
+    FROM users
+    WHERE event_code = ${ eventCode }
     `
 
+    const thisUserID = parseInt(userCountQuery[0].count)
 
+    console.log(userCountQuery, thisUserID)
+
+    await sql`
+    INSERT INTO users(event_code, user_id, user_name)
+    VALUES( ${ eventCode }, ${ thisUserID }, ${ userName })
+    `
+
+    
+
+
+    //calc userID
+    //add user to database
+
+    //add their availabilities
 }
-

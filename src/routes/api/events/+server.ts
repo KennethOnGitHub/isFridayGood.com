@@ -1,5 +1,6 @@
 import { json } from "@sveltejs/kit";
-import { tableFormToDatabaseForm } from "$lib/server/utils.js"
+import { tableFormToDatabaseForm, addUserToEvent } from "$lib/server/utils.js"
+import { sql } from "../../../db.server.js";
 
 function generateEventCode(): string {
     const EVENT_CODE_CHARACTER_SET = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -21,9 +22,10 @@ export async function POST({ request, cookies}): Promise<Response> {
     const availabilityQueue = tableFormToDatabaseForm(event.availability, new Date(event.firstDate))
     const eventCode = generateEventCode()
 
-    const sqlCreateQuery = `
-    INSERT INTO events (event_code, event_name, first_date)
-    VALUES (${eventCode}, ${event.eventTitle}, ${event.firstDate})`
+    // sql`INSERT INTO events (event_code, event_name, first_date)
+    // VALUES (${eventCode}, ${event.eventTitle}, ${event.firstDate})`;
+    
+    addUserToEvent(eventCode, "HOST", availabilityQueue)
 
     return json({ eventCode }, {status: 201})
 }
