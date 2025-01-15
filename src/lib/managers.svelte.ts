@@ -32,7 +32,7 @@ export class EventCreationManager implements Manager{
             body: JSON.stringify({ 
                 title: this.eventTitle,
                 availability: this.highlighter.availabilityData.availability,
-                firstDate: this.highlighter.availabilityData.firstDate.toISOString() //Converting to ISO String accounts for timezones
+                firstDate: this.highlighter.availabilityData.firstDate.toISOString()
                 })
         })
 
