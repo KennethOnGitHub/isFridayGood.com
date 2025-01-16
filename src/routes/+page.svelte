@@ -47,6 +47,7 @@
                 maxlength="48"
                 oninput={updateTitleInput}
                 style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}"
+                bind:value={eventCreationManager.eventTitle}
                 >
     
                 <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>
