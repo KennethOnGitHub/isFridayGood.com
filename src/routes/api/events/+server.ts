@@ -33,8 +33,11 @@ export async function POST({ request, cookies}): Promise<Response> {
 
     await sql`
     INSERT INTO events(event_code, event_name, first_date)
-    VALUES (${ eventCode }, ${ event.title }, ${ dateWithoutTime })
-    `
+    VALUES (${ eventCode }, ${ event.title }, ${ dateWithoutTime })`
 
     return json({ eventCode }, {status: 201})
 }
+
+// export async function PUT({ request, cookies}): Promise<Response> {
+
+// }

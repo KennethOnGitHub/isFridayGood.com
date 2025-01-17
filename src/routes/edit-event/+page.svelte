@@ -13,7 +13,7 @@
         const HEIGHT_TO_WIDTH:number = 3/2;
         const maxWidth:number = window.innerWidth * MAX_WIDTH_PROPORTION;
 
-        const placeHolderLength:number = editEventManager.eventTitle.length;
+        const placeHolderLength:number = "EVENT NAME".length;
         eventTitleInput.style.width = Math.max(placeHolderLength, eventTitleInput.value.length) + 'ch';  
 
         const fontPerfectFitSize = ((maxWidth / eventTitleInput.value.length) * HEIGHT_TO_WIDTH)
@@ -40,10 +40,11 @@
 
         <div class = "event-title">
             <input bind:this={eventTitleInput} 
-            placeholder={editEventManager.eventTitle} 
+            placeholder="EVENT NAME"
             maxlength="48"
             oninput={updateTitleInput}
             style="--default-font-size: {TITLE_DEFAULT_FONT_SIZE}; --starting-width: {editEventManager.eventTitle.length}ch"
+            bind:value={editEventManager.eventTitle}
             >
 
             <button onpointerdown={() => eventTitleInput.focus()}><img src="/edit_square.svg" alt='✏️'></button>

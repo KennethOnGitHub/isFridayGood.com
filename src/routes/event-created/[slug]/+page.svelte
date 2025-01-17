@@ -1,10 +1,10 @@
 <script lang="ts">
+    import type { PageData } from './$types';
 
-    const shareURL = "isFridaygood.com/test123";
-
-    const eventTitle = "TestTitle"
+    const { data }: { data: PageData } = $props()
+    const shareURL = `isFridaygood.com/${data.eventCode}`  
+    const eventTitle = "test"
     
-
     let linkContainer:HTMLButtonElement;
 
     interface screenCoords {
