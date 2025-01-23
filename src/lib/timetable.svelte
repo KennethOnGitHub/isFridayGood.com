@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { Manager } from "./managers.svelte";
 
-    const userLoadPageDate = new Date(); 
+    const userLoadPageDate = new Date();  
     //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
     let timetable: HTMLDivElement;
 

@@ -1,9 +1,26 @@
 <script lang="ts">
+    import type { PageData } from "./$types";
+    import { loadEvent } from "$lib/utils";
+
+    const { data }: {data: PageData} = $props()
+
     import { CreateResponseManager } from "$lib/managers.svelte";
-    const createResponseManager = new CreateResponseManager("code123") 
+    // const createResponseManager = new CreateResponseManager(data.eventCode)
+    
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
+
+    async function instantiateManager(): Promise<CreateResponseManager>{
+        console.log("event: " + await loadEvent(data.eventCode))
+        const event = await loadEvent(data.eventCode)
+        return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, event.availabilities)
+    }
+
 </script>
+
+{#await instantiateManager()}
+    <p> Loading... </p>
+{:then createResponseManager} 
 
 <div class = "page">
     <div class = "top">
@@ -26,7 +43,9 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />
-        <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">SUBMIT</button>
+        <button onclick={() => {createResponseManager.submitResponse()}}
+             type="submit" 
+             class = "create-button">SUBMIT</button>
         
         <button class = "more-settings">
             <img src=/edit_square.svg alt = '✏️'>
@@ -34,6 +53,7 @@
         </button>
     </div>
 </div>
+{/await}
 
 <style>
     div.page {

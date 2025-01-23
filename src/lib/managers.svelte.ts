@@ -104,19 +104,28 @@ class HostHighlighter implements Highlighter {
 export class CreateResponseManager implements Manager{
     timezone: number;
     eventTitle: string;
-    highlighter: Highlighter;
+    highlighter: AttendeeHighlighter;
     inviteCode: string;
 
-    constructor(inviteCode: string) {
+    constructor(inviteCode: string, eventTitle: string, firstDate: Date, hostAvailability: boolean[][]) {
         this.timezone = 0;
-        this.eventTitle = "Christmas Dinner at the Newman Household :D";
+        this.eventTitle = eventTitle;
         this.inviteCode = inviteCode;
         
-        this.highlighter = new AttendeeHighlighter();
+        this.highlighter = new AttendeeHighlighter(firstDate, [[]], hostAvailability);
     }
 
-    submitResponse() {
-        console.log("you haven't implemented this ken!!!")
+    async submitResponse() {
+        const response:Response = await fetch(`${this.inviteCode}` , {
+            method: 'POST',
+            body: JSON.stringify({ 
+                username: "testUser123",
+                availability: this.highlighter.availabilityData.attendeeAvailability,
+                firstDate: this.highlighter.availabilityData.firstDate.toISOString()
+                })
+        })
+
+        return response
     }
 }
 
@@ -127,14 +136,14 @@ export class EditResponseManager implements Manager {
     inviteCode: string;
     userName: string;
 
-    constructor(inviteCode: string, userName: string) {
+    constructor(inviteCode: string, userName: string, eventTitle: string, firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
         //send query
         this.timezone = 0; 
         this.eventTitle = "Test title";
         this.inviteCode = inviteCode;
         this.userName = userName;
 
-        this.highlighter = new AttendeeHighlighter();
+        this.highlighter = new AttendeeHighlighter(firstDate, attendeeAvailability, hostAvailability);
     }
 
     submitEdit() {
@@ -149,15 +158,10 @@ class AttendeeHighlighter implements Highlighter {
         hostAvailability: [[]],
     })
 
-    constructor() {
-        const testData:boolean[][] = [
-            new Array(48).fill(false),
-            new Array(48).fill(false),
-            new Array(48).fill(false),
-        ]
-        testData[1].splice(12, 8, true, true, true, true, true, true, true, true)
-        testData[2].splice(15, 8, true, true, true, true, true, true, true, true)
-        this.availabilityData.hostAvailability = testData;
+    constructor(firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
+        this.availabilityData.firstDate = firstDate
+        this.availabilityData.attendeeAvailability = attendeeAvailability
+        this.availabilityData.hostAvailability = hostAvailability
     }
 
     getSlotStyle(column: number, row: number): string {
