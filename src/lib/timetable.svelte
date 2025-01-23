@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { Manager } from "./managers.svelte";
 
-    const userLoadPageDate = new Date();  
+    // const userLoadPageDate = new Date();  
     //This HAS to be instantiated once as it avoids errors caused when the user is using the service around midnight
     let timetable: HTMLDivElement;
 
-    let { manager }: {manager: Manager} = $props();
+    let { manager, firstDate }: {manager: Manager, firstDate: Date} = $props();
 
     const STARTING_COLUMN_COUNT = 30;
     //30 completely a magic number, I chose this number as it should be enough columns to fit initially on a page
@@ -27,12 +27,12 @@
     }
 
     const daysOfTheWeek:string[] = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"]
-    const currentDay:number = userLoadPageDate.getDay();
+    const currentDay:number = firstDate.getDay();
 
     function getColumnDate(dayIndex: number) {
         //Tad inneficient since we are creating new objects, but creating one object that we then incremement day by day could lead
         //to problems as if we are ever getting the column date out of order we will get the wrong date
-        let columnDate:Date = new Date(userLoadPageDate);
+        let columnDate:Date = new Date(firstDate);
         columnDate.setDate(columnDate.getDate() + dayIndex)
         
         const dateFormat: Intl.DateTimeFormatOptions = {

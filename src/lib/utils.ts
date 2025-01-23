@@ -28,20 +28,26 @@ export async function loadEvent(event_code: string) {
     const request = await fetch(`/api/events/${event_code}`)
     const wholeEvent = await request.json() as WholeEvent
 
-    console.log(wholeEvent)
-    
     //converts from string to Date Object
     wholeEvent.userDatas.forEach(userData => {
         userData.availabilities = userData.availabilities.map(availability => ({start: new Date(availability.start), end: new Date(availability.end)})) 
     } )
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
 
+    console.log("whole:", wholeEvent)
+
     const availabilitiesTable = wholeEvent.userDatas.map(userData => databaseFormToTableForm(userData.availabilities, wholeEvent.eventData.firstDate))
 
+    console.log("wholeevent firstdata: ", wholeEvent.eventData.firstDate)
+    console.log("availabilities table:", availabilitiesTable)
+
+    //Transform to fit the data structure expected by front end
     const transformedEvent = {
         eventData: wholeEvent.eventData,
         availabilities: availabilitiesTable[0] //temporary
     }
+
+    console.log("transformed:", transformedEvent)
 
     return transformedEvent
 }
@@ -73,6 +79,8 @@ export function databaseFormToTableForm(availabilities: Availability[], firstSer
 
     const timetable:boolean[][] = []
 
+    console.log("converting following to timetable:", availabilities)
+
     availabilities.forEach(availability => {
         const start = dateTimeToArrayCoordinates(availability.start, firstServerDate)
         const end = dateTimeToArrayCoordinates(availability.end, firstServerDate)
@@ -85,8 +93,9 @@ export function databaseFormToTableForm(availabilities: Availability[], firstSer
         //Sets all the time between start (inclusive) and end (exclusive) to true
         let column = start.column
         let row = start.row
-        while (column < end.column || row < end.column ) {
+        while (column < end.column || row < end.row ) {
 
+            console.log("setting col, row, to true: ", column, row)
             timetable[column][row] = true
 
             row++

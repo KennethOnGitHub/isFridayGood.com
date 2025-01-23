@@ -11,8 +11,8 @@
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
-        console.log("event: " + await loadEvent(data.eventCode))
         const event = await loadEvent(data.eventCode)
+        console.log("event:", event)
         return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, event.availabilities)
     }
 
@@ -39,7 +39,7 @@
         </div>
     </div>
 
-    <Timetable manager = {createResponseManager}/>
+    <Timetable manager = {createResponseManager} firstDate = {createResponseManager.highlighter.availabilityData.firstDate}/>
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />

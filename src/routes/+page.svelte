@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    <Timetable manager = {eventCreationManager}/>
+    <Timetable manager = {eventCreationManager} firstDate = {new Date()}/>
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {eventCreationManager.timezone} />
