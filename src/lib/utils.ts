@@ -33,6 +33,7 @@ export async function loadEvent(event_code: string) {
         userData.availabilities = userData.availabilities.map(availability => ({start: new Date(availability.start), end: new Date(availability.end)})) 
     } )
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
+    wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0)
 
     console.log("whole:", wholeEvent)
 

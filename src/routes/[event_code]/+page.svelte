@@ -9,6 +9,7 @@
     
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
+    import { goto } from "$app/navigation";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
@@ -43,9 +44,24 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />
-        <button onclick={() => {createResponseManager.submitResponse()}}
-             type="submit" 
-             class = "create-button">SUBMIT</button>
+        <button onclick={ async () => {
+
+            const username = prompt("Input username: ")
+
+            //Validating
+            while (username === null) {
+                prompt("Username was empty, enter name:")
+            }
+
+            const response = await createResponseManager.submitResponse(username)
+
+            if (response.ok) {
+                window.alert("success!")
+            }else {
+                window.alert("Error: Failed send!!")
+            }}}
+            type="submit" 
+            class = "create-button">SUBMIT</button>
         
         <button class = "more-settings">
             <img src=/edit_square.svg alt = '✏️'>

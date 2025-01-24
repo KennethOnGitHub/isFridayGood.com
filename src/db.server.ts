@@ -24,6 +24,7 @@ export async function checkEventExists(eventCode: string): Promise<boolean> {
 }
 
 export async function addUserToEvent(eventCode: string, userName: string, availabilities: Availability[]) {
+    console.log(eventCode, userName, availabilities)
     const presenceCheckQuery = await sql`
     SELECT EXISTS (
         SELECT 1

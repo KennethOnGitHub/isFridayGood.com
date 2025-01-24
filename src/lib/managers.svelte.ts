@@ -115,11 +115,11 @@ export class CreateResponseManager implements Manager{
         this.highlighter = new AttendeeHighlighter(firstDate, [[]], hostAvailability);
     }
 
-    async submitResponse() {
-        const response:Response = await fetch(`${this.inviteCode}` , {
+    async submitResponse(username: string) {
+        const response:Response = await fetch(`/api/events/${this.inviteCode}/responses` , {
             method: 'POST',
             body: JSON.stringify({ 
-                username: "testUser123",
+                username: username,
                 availability: this.highlighter.availabilityData.attendeeAvailability,
                 firstDate: this.highlighter.availabilityData.firstDate.toISOString()
                 })
