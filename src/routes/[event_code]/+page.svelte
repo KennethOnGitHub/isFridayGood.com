@@ -9,7 +9,6 @@
     
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
-    import { goto } from "$app/navigation";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
