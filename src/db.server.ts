@@ -32,6 +32,7 @@ export async function addUserToEvent(eventCode: string, userName: string, availa
         WHERE event_code = ${eventCode} AND user_name = ${userName}
         );`
 
+    console.log("conducted presence check!")
     const { exists } = presenceCheckQuery[0]
     if (exists) {
         throw Error("User with that name already Exists!")
