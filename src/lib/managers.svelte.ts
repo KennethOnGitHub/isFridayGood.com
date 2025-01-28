@@ -112,7 +112,7 @@ export class CreateResponseManager implements Manager{
         this.eventTitle = eventTitle;
         this.inviteCode = inviteCode;
         
-        this.highlighter = new AttendeeHighlighter(firstDate, [[]], hostAvailability);
+        this.highlighter = new AttendeeHighlighter(firstDate, [], hostAvailability);
     }
 
     async submitResponse(username: string) {
