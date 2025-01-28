@@ -25,7 +25,7 @@ export async function POST({ request, cookies}): Promise<Response> {
     const availabilityQueue = tableFormToDatabaseForm(event.availability, new Date(event.firstDate))
     const eventCode = generateEventCode()
     
-    addUserToEvent(eventCode, "HOST", availabilityQueue)
+    await addUserToEvent(eventCode, "HOST", availabilityQueue)
 
     const DATE_FORMAT = "YYYY-MM-YY"
     const dateWithoutTime = event.firstDate.substring(0, DATE_FORMAT.length)
