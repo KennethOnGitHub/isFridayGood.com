@@ -45,11 +45,11 @@
         <TimezoneSelect bind:userTimezone = {createResponseManager.timezone} />
         <button onclick={ async () => {
 
-            const username = prompt("Input username: ")
+            let username = prompt("Input username: ")
 
             //Validating
             while (username === null) {
-                prompt("Username was empty, enter name:")
+                username = prompt("Username was empty, enter name:")
             }
 
             const response = await createResponseManager.submitResponse(username)
