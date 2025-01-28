@@ -48,7 +48,7 @@
             let username = prompt("Input username: ")
 
             //Validating
-            while (username === null) {
+            while (!username) {
                 username = prompt("Username was empty, enter name:")
             }
 
