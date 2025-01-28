@@ -33,7 +33,7 @@ export async function loadEvent(event_code: string) {
         userData.availabilities = userData.availabilities.map(availability => ({start: new Date(availability.start), end: new Date(availability.end)})) 
     } )
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
-    wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0)
+    wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0) //Sets time to midnight
 
     console.log("whole:", wholeEvent)
 
@@ -111,11 +111,13 @@ export function databaseFormToTableForm(availabilities: Availability[], firstSer
 }
 
 export function tableFormToDatabaseForm(timeTable: boolean[][], initialDateTime: Date): Availability[] {
-    console.log(`firstdate: ${initialDateTime}`)
+    console.log(`converting table to DB... firstdate: ${initialDateTime}`)
 
-    const MILLISECONDS_IN_SECOND = 1000
-    const SECONDS_PER_MINUTE = 60
-    const MILLISECONDS_PER_TIME_SLOT = 30 * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND
+    timeTable.forEach(
+        column => 
+            {if (column.length != TIME_SLOTS_PER_DAY) {
+                throw new Error("Could not convert timetable to database form. A column in the timetable is not the correct size!")
+            }})
 
     const timeStream = timeTable.flat()
     let i = 0
