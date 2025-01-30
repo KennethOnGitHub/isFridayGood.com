@@ -207,7 +207,7 @@ test("databaseFormToTableForm_OneAvailabilityAcross2Days", () => {
 test("databaseFormToTableForm_OneAvailabilityAcross3Days", () => {
     
     const availabilities = [
-        {start: new Date("1970-01-01T23:00:00"), end: new Date("1970-01-03T00:30:00")},
+        {start: new Date("1970-01-01T23:00:00"), end: new Date("1970-01-03T00:30:00")}
     ]
     const firstDate = new Date("1970-01-01T00:00:00")
 
