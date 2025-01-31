@@ -11,8 +11,6 @@
     async function instantiateManager(): Promise<ViewResultsManager>{
         const event = await loadEvent(data.eventCode)
 
-        const availabilities = event.availabilities
-
         return new ViewResultsManager(event)
     }
 </script>
