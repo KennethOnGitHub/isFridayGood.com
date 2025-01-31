@@ -25,10 +25,10 @@ export interface EventViewModel {
     availabilities: Map<string, boolean[][]>
 }
 
-const MILLISECONDS_IN_SECOND = 1000
-const SECONDS_PER_MINUTE = 60
+export const MILLISECONDS_IN_SECOND = 1000
+export const SECONDS_PER_MINUTE = 60
 const MINUTES_PER_TIME_SLOT = 30
-const MILLISECONDS_PER_TIME_SLOT = MINUTES_PER_TIME_SLOT * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND
+export const MILLISECONDS_PER_TIME_SLOT = MINUTES_PER_TIME_SLOT * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND
 export const TIME_SLOTS_PER_DAY = 24 * 60 / MINUTES_PER_TIME_SLOT
 
 export async function loadEvent(event_code: string): Promise<EventViewModel> {

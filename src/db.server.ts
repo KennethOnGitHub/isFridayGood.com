@@ -65,3 +65,9 @@ export async function addUserToEvent(eventCode: string, userName: string, availa
     console.log("ADDED USER'S AVAILABILITIES!!")
 }
 
+export async function bookTime(eventcode: string, bookedTime: Date) {
+    await sql`UPDATE events
+    SET selected_time = ${bookedTime}
+    WHERE event_code = ${eventcode}`
+    console.log("Booked Time!!!", bookedTime, eventcode)
+}

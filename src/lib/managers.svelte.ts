@@ -1,5 +1,5 @@
 import * as settings from "$lib/settings"
-import  { type EventViewModel, TIME_SLOTS_PER_DAY } from "./utils";
+import  { type EventViewModel, MILLISECONDS_IN_SECOND, MILLISECONDS_PER_TIME_SLOT, SECONDS_PER_MINUTE, TIME_SLOTS_PER_DAY,  } from "./utils";
 
 export interface Manager {
     timezone: number,
@@ -199,20 +199,29 @@ class AttendeeHighlighter implements Highlighter {
 export class ViewResultsManager implements Manager {
     timezone: number;
     eventTitle: string;
-    highlighter: ResultsHighlighter;//<-could do this for others?
+    highlighter: ResultsHighlighter;
+    inviteCode: string
 
     constructor(event: EventViewModel) {
-        this.timezone = 0; //PLACEHOLDER
+        this.timezone = 0; 
         this.eventTitle = event.eventData.name
+        this.inviteCode = event.eventData.code
 
-        this.highlighter = new ResultsHighlighter(event.availabilities)
+        this.highlighter = new ResultsHighlighter(event.availabilities, event.eventData.firstDate)
     }
 
-    BookTime() {
-        //do stuff
-    }
+    async BookTime() {
 
-    
+        const timeSlotsAfterFirstDate = (this.highlighter.confirmedTime.column * TIME_SLOTS_PER_DAY) + this.highlighter.confirmedTime.row
+        const timeAfterFirstDate = timeSlotsAfterFirstDate * MILLISECONDS_PER_TIME_SLOT
+        const bookedDateTime: Date = new Date(this.highlighter.availabilityData.firstDate.getTime() + timeAfterFirstDate)
+
+
+        fetch(`/api/events/${this.inviteCode}/select-time`, {
+            method: 'PUT',
+            body: JSON.stringify({bookedTime: bookedDateTime})
+            })
+    }   
 }
 
 class ResultsHighlighter implements Highlighter {
@@ -226,7 +235,9 @@ class ResultsHighlighter implements Highlighter {
     availableAttendees: number[] = $state([])
 
 
-    constructor(inputAvailabilities: Map<string, boolean[][]>) {
+    constructor(inputAvailabilities: Map<string, boolean[][]>, firstDate: Date) {
+
+        this.availabilityData.firstDate = firstDate
 
         // const availabilitiesColumnCount = Math.max(...[...availabilities.values()].map(table => table.length)) //utterly unreadable!
 
