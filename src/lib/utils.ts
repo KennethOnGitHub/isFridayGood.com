@@ -1,3 +1,5 @@
+import { time } from "console"
+
 export interface Availability {
     start: Date,
     end: Date,
@@ -24,7 +26,7 @@ const MINUTES_PER_TIME_SLOT = 30
 const MILLISECONDS_PER_TIME_SLOT = MINUTES_PER_TIME_SLOT * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND
 const TIME_SLOTS_PER_DAY = 24 * 60 / MINUTES_PER_TIME_SLOT
 
-export async function loadEvent(event_code: string, filterUsers?: string[]) {
+export async function loadEvent(event_code: string) {
     const request = await fetch(`/api/events/${event_code}`)
     const wholeEvent = await request.json() as WholeEvent
 
@@ -42,11 +44,12 @@ export async function loadEvent(event_code: string, filterUsers?: string[]) {
     //     availabilities: databaseFormToTableForm(userData.availabilities, wholeEvent.eventData.firstDate)
     // }))
 
+    
     const availabilitiesTables = new Map<string, boolean[][]>()
     wholeEvent.userDatas.forEach(userData => {
-        if (filterUsers == undefined || filterUsers.includes(userData.username)) {
-            availabilitiesTables.set(userData.username, databaseFormToTableForm(userData.availabilities, wholeEvent.eventData.firstDate))
-        }
+        //Convert to 2D array as that is what the code ahead expects
+        const timetable:boolean[][] = databaseFormToTableForm(userData.availabilities, wholeEvent.eventData.firstDate)
+        availabilitiesTables.set(userData.username, timetable)
     })
 
     //Transform to fit the data structure expected by front end
@@ -54,8 +57,6 @@ export async function loadEvent(event_code: string, filterUsers?: string[]) {
         eventData: wholeEvent.eventData,
         availabilities: availabilitiesTables
     }
-
-    console.log("transformed:", transformedEvent)
 
     return transformedEvent
 }

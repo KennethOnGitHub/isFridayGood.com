@@ -12,8 +12,14 @@
 
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode, ["HOST"])
-        console.log("event:", event)
-        return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, event.availabilities)
+        
+        const hostAvailability = event.availabilities.get("HOST")
+        if (hostAvailability !== undefined) {
+            return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, hostAvailability)
+        }
+        else {
+            throw Error("Host availability failed to retreive!")
+        }
     }
 
 </script>
