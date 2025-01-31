@@ -1,4 +1,5 @@
 import * as settings from "$lib/settings"
+import  { type EventViewModel, TIME_SLOTS_PER_DAY } from "./utils";
 
 export interface Manager {
     timezone: number,
@@ -199,14 +200,12 @@ export class ViewResultsManager implements Manager {
     timezone: number;
     eventTitle: string;
     highlighter: ResultsHighlighter;//<-could do this for others?
-    inviteCode: string;
 
-    constructor(inviteCode: string) {
+    constructor(event: EventViewModel) {
         this.timezone = 0; //PLACEHOLDER
-        this.eventTitle = "Christmas Dinner at the Newman Household :D",
-        this.inviteCode = inviteCode;
+        this.eventTitle = event.eventData.name
 
-        this.highlighter = new ResultsHighlighter()
+        this.highlighter = new ResultsHighlighter(event.availabilities)
     }
 
     BookTime() {
@@ -218,29 +217,38 @@ export class ViewResultsManager implements Manager {
 
 class ResultsHighlighter implements Highlighter {
     availabilityData: {firstDate: Date, availabilities: number[][][], respondents: string[]} = $state({
-        firstDate: new Date(),
+        firstDate: new Date(0),
         availabilities: [[[]]],
-        respondents: ["Simon", "Hamish", "Sammy"],
+        respondents: [],
     });
     selectedRespondentID?: number = $state(undefined);
     confirmedTime: {column: number, row: number} = $state({column: 0, row: 0});
     availableAttendees: number[] = $state([])
 
 
-    constructor() {
-        const testData: number[][][] = [
-            new Array(48).fill(new Array()),
-            new Array(48).fill(new Array()),
-            new Array(48).fill(new Array()),
-        ]
+    constructor(inputAvailabilities: Map<string, boolean[][]>) {
 
-        testData[1].splice(12, 8, [0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2], [0, 1, 2]);
-        testData[2].splice(12, 8, [0, 1], [0, 1], [0, 1], [1, 2], [1, 2], [1, 2], [1], [1]);
+        // const availabilitiesColumnCount = Math.max(...[...availabilities.values()].map(table => table.length)) //utterly unreadable!
 
-        console.log(testData);
+        //Makes the 3D array the right size
+        const inputAvailabilitiesLengths:number[] = [...inputAvailabilities.values()].map(table => table.length) //Gets the length of each table
+        const largestAvailabilityTableSize:number = Math.max(...inputAvailabilitiesLengths)
+        this.availabilityData.availabilities = new Array(largestAvailabilityTableSize).fill(new Array(48))
 
-        this.availabilityData.availabilities = testData;
+        const userDataArray = [...inputAvailabilities.entries()]
+        for (let userID = 0; userID < inputAvailabilities.size; userID++) {
+            const currentUserUsername = userDataArray[userID][0]
+            this.availabilityData.respondents.push(currentUserUsername)
+            const currentUserAvailabilityTable = userDataArray[userID][1]
 
+            for (let column = 0; column < currentUserAvailabilityTable.length; column++) {
+                for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
+                    if (currentUserAvailabilityTable[column][row] == true) {
+                        this.availabilityData.availabilities[column][row].push(userID)
+                    }
+                }
+            }
+        }
     }
 
     getSlotStyle(column: number, row: number): string {

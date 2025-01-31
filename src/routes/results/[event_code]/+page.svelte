@@ -1,11 +1,26 @@
 <script lang="ts">
     import { ViewResultsManager } from "$lib/managers.svelte";
-    const viewResultsManager = new ViewResultsManager("assjfasijfaisghia");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
     import * as settings from "$lib/settings"
+
+    import type { PageData } from "./$types";
+    import { loadEvent } from "$lib/utils";
+    const { data }: {data: PageData} = $props()
+
+    async function instantiateManager(): Promise<ViewResultsManager>{
+        const event = await loadEvent(data.eventCode)
+
+        const availabilities = event.availabilities
+
+        return new ViewResultsManager(event)
+    }
 </script>
 
+
+{#await instantiateManager()}
+    <p>Loading...</p>
+{:then viewResultsManager} 
 <div class = "page">
     <div class = "top">
         <nav>
@@ -49,6 +64,8 @@
         </button>
     </div>
 </div>
+{/await}
+
 
 <style>
     div.page {

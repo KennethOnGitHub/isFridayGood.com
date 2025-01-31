@@ -1,4 +1,5 @@
 import { time } from "console"
+import exp from "constants"
 
 export interface Availability {
     start: Date,
@@ -10,23 +11,30 @@ export interface UserData {
     availabilities: Availability[]
 }
 
+export interface EventData {
+    code: string,
+    name: string,
+    firstDate: Date,
+    selectedTime: Date,
+}
+
 export interface WholeEvent {
-    eventData: {
-        code: string,
-        name: string,
-        firstDate: Date,
-        selectedTime: Date,
-    }
+    eventData: EventData
     userDatas: UserData[]
+}
+
+export interface EventViewModel {
+    eventData: EventData
+    availabilities: Map<string, boolean[][]>
 }
 
 const MILLISECONDS_IN_SECOND = 1000
 const SECONDS_PER_MINUTE = 60
 const MINUTES_PER_TIME_SLOT = 30
 const MILLISECONDS_PER_TIME_SLOT = MINUTES_PER_TIME_SLOT * SECONDS_PER_MINUTE * MILLISECONDS_IN_SECOND
-const TIME_SLOTS_PER_DAY = 24 * 60 / MINUTES_PER_TIME_SLOT
+export const TIME_SLOTS_PER_DAY = 24 * 60 / MINUTES_PER_TIME_SLOT
 
-export async function loadEvent(event_code: string) {
+export async function loadEvent(event_code: string): Promise<EventViewModel> {
     const request = await fetch(`/api/events/${event_code}`)
     const wholeEvent = await request.json() as WholeEvent
 
@@ -36,14 +44,6 @@ export async function loadEvent(event_code: string) {
     } )
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
     wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0) //Sets time to midnight
-
-    console.log("whole:", wholeEvent)
-
-    // const availabilitiesTable = wholeEvent.userDatas.map(userData => ({
-    //     username: userData.username, 
-    //     availabilities: databaseFormToTableForm(userData.availabilities, wholeEvent.eventData.firstDate)
-    // }))
-
     
     const availabilitiesTables = new Map<string, boolean[][]>()
     wholeEvent.userDatas.forEach(userData => {
@@ -53,12 +53,12 @@ export async function loadEvent(event_code: string) {
     })
 
     //Transform to fit the data structure expected by front end
-    const transformedEvent = {
+    const viewModel = {
         eventData: wholeEvent.eventData,
         availabilities: availabilitiesTables
     }
 
-    return transformedEvent
+    return viewModel
 }
 
 export function dateTimeToArrayCoordinates(targetDate: Date, firstDateOfArray: Date): {column: number, row: number} {

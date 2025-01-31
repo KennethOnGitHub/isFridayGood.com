@@ -11,8 +11,8 @@
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
-        const event = await loadEvent(data.eventCode, ["HOST"])
-        
+        const event = await loadEvent(data.eventCode)
+
         const hostAvailability = event.availabilities.get("HOST")
         if (hostAvailability !== undefined) {
             return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, hostAvailability)
