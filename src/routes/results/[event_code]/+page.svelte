@@ -50,7 +50,7 @@
             {/each}
         </ul>
     </div>
-    <Timetable manager = {viewResultsManager}/>
+    <Timetable manager = {viewResultsManager} firstDate = {viewResultsManager.highlighter.availabilityData.firstDate}/>
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {viewResultsManager.timezone} />
