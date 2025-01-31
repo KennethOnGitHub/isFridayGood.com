@@ -233,18 +233,20 @@ class ResultsHighlighter implements Highlighter {
         //Makes the 3D array the right size
         const inputAvailabilitiesLengths:number[] = [...inputAvailabilities.values()].map(table => table.length) //Gets the length of each table
         const largestAvailabilityTableSize:number = Math.max(...inputAvailabilitiesLengths)
-        this.availabilityData.availabilities = new Array(largestAvailabilityTableSize).fill(new Array(48))
+        this.availabilityData.availabilities = new Array(largestAvailabilityTableSize).fill(new Array(48).fill([]))
 
-        const userDataArray = [...inputAvailabilities.entries()]
-        for (let userID = 0; userID < inputAvailabilities.size; userID++) {
-            const currentUserUsername = userDataArray[userID][0]
-            this.availabilityData.respondents.push(currentUserUsername)
-            const currentUserAvailabilityTable = userDataArray[userID][1]
 
-            for (let column = 0; column < currentUserAvailabilityTable.length; column++) {
+        const usernames = [...inputAvailabilities.keys()]
+        //Inserts each users availabilities into the 3D array
+        for (let userId = 0; userId < usernames.length; userId++) {
+            const curUsername = usernames[userId]
+            const curUsersAvailabilities = inputAvailabilities.get(curUsername)!
+            this.availabilityData.respondents.push(curUsername)
+
+            for (let column = 0; column < curUsersAvailabilities.length; column++) {
                 for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
-                    if (currentUserAvailabilityTable[column][row] == true) {
-                        this.availabilityData.availabilities[column][row].push(userID)
+                    if (curUsersAvailabilities[column][row] == true) {
+                        this.availabilityData.availabilities[column][row].push(userId)
                     }
                 }
             }
