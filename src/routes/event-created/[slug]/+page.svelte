@@ -49,7 +49,7 @@
         <p>Share</p>
     </button>
 
-    <a href={shareURL} class = view-results>
+    <a href="/results/{data.eventCode}" class = view-results>
         View Results
     </a>
 
