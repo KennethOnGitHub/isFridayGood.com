@@ -133,16 +133,14 @@ export class CreateResponseManager implements Manager{
 export class EditResponseManager implements Manager {
     timezone: number;
     eventTitle: string;
-    highlighter: Highlighter;
+    highlighter: AttendeeHighlighter;
     inviteCode: string;
-    userName: string;
 
-    constructor(inviteCode: string, userName: string, eventTitle: string, firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
+    constructor(inviteCode: string, eventTitle: string, firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
         //send query
         this.timezone = 0; 
-        this.eventTitle = "Test title";
         this.inviteCode = inviteCode;
-        this.userName = userName;
+        this.eventTitle = eventTitle;
 
         this.highlighter = new AttendeeHighlighter(firstDate, attendeeAvailability, hostAvailability);
     }
@@ -210,7 +208,7 @@ export class ViewResultsManager implements Manager {
         this.highlighter = new ResultsHighlighter(event.availabilities, event.eventData.firstDate)
     }
 
-    async BookTime() {
+    async bookTime() {
 
         const timeSlotsAfterFirstDate = (this.highlighter.confirmedTime.column * TIME_SLOTS_PER_DAY) + this.highlighter.confirmedTime.row
         const timeAfterFirstDate = timeSlotsAfterFirstDate * MILLISECONDS_PER_TIME_SLOT

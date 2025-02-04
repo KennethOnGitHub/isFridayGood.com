@@ -1,10 +1,32 @@
 <script lang="ts">
     import { EditResponseManager } from "$lib/managers.svelte";
-    const editResponseManager = new EditResponseManager("testcode123", "Hamish Lindsay");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
+    import { loadEvent } from "$lib/utils";
+    import type { PageData } from "./$types";
+
+    const { data }: { data: PageData } = $props()
+
+
+    async function instantiateManager(): Promise<EditResponseManager>{
+        const thisEvent = await loadEvent(data.eventCode)
+        const respondentUsername = data.user
+
+        //Validate the user has responded
+        if (thisEvent.availabilities.has(data.user) == false) {
+            throw Error ("User with this name hasn't responded to this event!")
+        }
+
+        return new EditResponseManager(thisEvent.eventData.code, thisEvent.eventData.name, thisEvent.eventData.firstDate, thisEvent.availabilities.get(respondentUsername)!, thisEvent.availabilities.get("HOST")!)
+        
+    }
+
 </script>
 
+{#await instantiateManager()}
+    <p>Loading...</p>
+{:then editResponseManager} 
+    
 <div class = "page">
     <div class = "top">
         <nav>
@@ -22,7 +44,7 @@
         </div>
     </div>
 
-    <Timetable manager = {editResponseManager}/>
+    <Timetable manager = {editResponseManager} firstDate = {editResponseManager.highlighter.availabilityData.firstDate}/>
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {editResponseManager.timezone} />
@@ -34,6 +56,8 @@
         </button>
     </div>
 </div>
+
+{/await}
 
 <style>
     div.page {

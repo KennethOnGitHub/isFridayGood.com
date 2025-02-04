@@ -54,7 +54,7 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {viewResultsManager.timezone} />
-        <button onclick={() => {viewResultsManager.BookTime()}} type="submit" class = "create-button">SELECT TIME</button>
+        <button onclick={() => {viewResultsManager.bookTime()}} type="submit" class = "create-button">SELECT TIME</button>
         
         <button class = "more-settings">
             <img src=/edit_square.svg alt = '✏️'>
