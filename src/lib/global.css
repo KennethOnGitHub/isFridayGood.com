@@ -5,4 +5,5 @@
 
 * {
     font-family: JetBrainsMono;
+    touch-action: manipulation;
 }
