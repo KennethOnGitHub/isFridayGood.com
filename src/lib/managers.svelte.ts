@@ -135,18 +135,28 @@ export class EditResponseManager implements Manager {
     eventTitle: string;
     highlighter: AttendeeHighlighter;
     inviteCode: string;
+    username: string;
 
-    constructor(inviteCode: string, eventTitle: string, firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
+    constructor(inviteCode: string, eventTitle: string, username: string, firstDate: Date, attendeeAvailability: boolean[][], hostAvailability: boolean[][]) {
         //send query
         this.timezone = 0; 
         this.inviteCode = inviteCode;
         this.eventTitle = eventTitle;
+        this.username = username
 
         this.highlighter = new AttendeeHighlighter(firstDate, attendeeAvailability, hostAvailability);
     }
 
-    submitEdit() {
+    async submitEdit(): Promise<Response> {
+        const response:Response = await fetch(`/api/events/${this.inviteCode}/responses/${this.username}`, {
+            method: "PUT",
+            body: JSON.stringify({
+                availability: this.highlighter.availabilityData.attendeeAvailability,
+                firstDate: this.highlighter.availabilityData.firstDate
+            }),
+        })
 
+        return response
     }
 }
 

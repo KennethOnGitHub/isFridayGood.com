@@ -89,7 +89,7 @@ export async function updateUserAvailabilities(eventCode: string, username: stri
         throw Error("User with that name does not exist!")
     }
 
-    const userIdQuery = await sql<{user_id: number}[]>`SELECT user_id FROM users WHERE event_code = ${eventCode} AND username = ${username}`
+    const userIdQuery = await sql<{user_id: number}[]>`SELECT user_id FROM users WHERE event_code = ${eventCode} AND user_name = ${username}`
     const userId: number = userIdQuery[0].user_id
 
     //Deletes their existing availabilities

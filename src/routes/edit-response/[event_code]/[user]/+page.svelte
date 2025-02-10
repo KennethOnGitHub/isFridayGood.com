@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { goto } from "$app/navigation";
     import { EditResponseManager } from "$lib/managers.svelte";
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
@@ -17,8 +18,12 @@
             throw Error ("User with this name hasn't responded to this event!")
         }
 
-        return new EditResponseManager(thisEvent.eventData.code, thisEvent.eventData.name, thisEvent.eventData.firstDate, thisEvent.availabilities.get(respondentUsername)!, thisEvent.availabilities.get("HOST")!)
-        
+        return new EditResponseManager(thisEvent.eventData.code, 
+        thisEvent.eventData.name, 
+        respondentUsername, 
+        thisEvent.eventData.firstDate, 
+        thisEvent.availabilities.get(respondentUsername)!, 
+        thisEvent.availabilities.get("HOST")!)
     }
 
 </script>
@@ -48,7 +53,17 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {editResponseManager.timezone} />
-        <button onclick={() => {window.location.href = "/results"}} type="submit" class = "create-button">SUBMIT</button>
+        <button onclick={ async () => {
+            const response = await editResponseManager.submitEdit()
+            
+            if (response.ok) {
+                goto(`/results/${data.eventCode}`)
+            }
+            else {
+                window.alert("Error: Edit Failed!")
+            }
+
+            }} type="submit" class = "create-button">EDIT</button>
         
         <button class = "more-settings">
             <img src=/edit_square.svg alt = '✏️'>
