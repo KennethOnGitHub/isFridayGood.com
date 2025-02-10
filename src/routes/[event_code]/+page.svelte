@@ -9,6 +9,7 @@
     
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
+    import { goto } from "$app/navigation";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
@@ -61,7 +62,7 @@
             const response = await createResponseManager.submitResponse(username)
 
             if (response.ok) {
-                window.alert("success!")
+                goto(`/results/${data.eventCode}`)
             }else {
                 window.alert("Error: Failed send!!")
             }}}
