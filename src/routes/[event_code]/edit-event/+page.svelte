@@ -1,9 +1,12 @@
 <script lang="ts">
     import { EditEventManager } from "$lib/managers.svelte";
-    const editEventManager = new EditEventManager("testCode123");
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
     import { onMount } from "svelte";
+    import { loadEvent } from "$lib/utils";
+    import type { PageData } from "./$types";
+
+    const { data }: { data: PageData } = $props()
     
     let eventTitleInput:HTMLInputElement;
     const TITLE_DEFAULT_FONT_SIZE = 24;
@@ -25,9 +28,21 @@
         () => {window.addEventListener('resize', updateTitleInput)}
     )
 
+    async function instantiateManager():Promise<EditEventManager> {
+        const thisEvent = await loadEvent(data.eventCode)
+
+        return new EditEventManager(thisEvent.eventData.code, 
+        thisEvent.eventData.name, 
+        thisEvent.availabilities.get("HOST")!,
+        thisEvent.eventData.firstDate,
+    ) 
+    }
 
 </script>
 
+{#await instantiateManager()}
+    <p>Loading...</p>
+{:then editEventManager} 
 <div class = "page">
     <div class = "top">
         <nav>
@@ -51,7 +66,7 @@
         </div>
     </div>
 
-    <Timetable manager = {editEventManager}/>
+    <Timetable manager = {editEventManager} firstDate = {editEventManager.highlighter.availabilityData.firstDate}/>
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {editEventManager.timezone} />
@@ -62,6 +77,9 @@
         </button>
     </div>
 </div>
+    
+{/await}
+
 
 <style>
     div.page {

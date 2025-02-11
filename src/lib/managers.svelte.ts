@@ -44,20 +44,18 @@ export class EventCreationManager implements Manager{
 export class EditEventManager implements Manager{
     timezone: number;
     eventTitle: string;
-    highlighter: Highlighter;
+    highlighter: HostHighlighter;
     inviteCode: string;
 
-    constructor(inviteCode: string) {
-        //query database
-
+    constructor(eventTitle: string, eventCode: string, availabilities: boolean[][], firstDate: Date) {
         this.timezone = 0;
-        this.eventTitle = "SAMS EPIC TEA PARTY";
-        this.inviteCode = inviteCode;
+        this.eventTitle = eventTitle;
+        this.inviteCode = eventCode;
 
-        this.highlighter = new HostHighlighter();
+        this.highlighter = new HostHighlighter(availabilities, firstDate);
     }
 
-    editEvent() {
+    async editEvent() {
         //send request
         console.log("afiashfiashfiashfa")
     }
@@ -65,11 +63,11 @@ export class EditEventManager implements Manager{
 
 class HostHighlighter implements Highlighter {
     availabilityData: {firstDate: Date, availability: boolean[][]} = $state({
-        firstDate: new Date(),
+        firstDate: new Date(0),
         availability:[[]]});
 
-    constructor(inputAvailability?: boolean[][]) {
-        if (inputAvailability != undefined) {
+    constructor(inputAvailability?: boolean[][], firstDate?: Date) {
+        if (inputAvailability != undefined && firstDate != undefined) {
             this.availabilityData.availability = inputAvailability;
         }else {
             this.availabilityData.availability = new Array<Array<boolean>>()
