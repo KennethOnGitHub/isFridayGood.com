@@ -1,6 +1,6 @@
-import type { PageLoad } from './$types';
+import type { LayoutLoad } from './$types';
 
-export const  load: PageLoad = ({ params }) => {
+export const  load: LayoutLoad = ({ params }) => {
 	return {
 		eventCode: params.event_code,
 	};
