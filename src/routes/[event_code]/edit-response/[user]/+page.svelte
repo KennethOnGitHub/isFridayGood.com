@@ -57,7 +57,7 @@
             const response = await editResponseManager.submitEdit()
             
             if (response.ok) {
-                goto(`/results/${data.eventCode}`)
+                goto(`/${data.eventCode}/results`)
             }
             else {
                 window.alert("Error: Edit Failed!")

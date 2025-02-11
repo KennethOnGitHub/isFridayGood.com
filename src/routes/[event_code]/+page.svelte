@@ -62,7 +62,7 @@
             const response = await createResponseManager.submitResponse(username)
 
             if (response.ok) {
-                goto(`/results/${data.eventCode}`)
+                goto(`/${data.eventCode}/results`)
             }else {
                 window.alert("Error: Failed send!!")
             }}}
