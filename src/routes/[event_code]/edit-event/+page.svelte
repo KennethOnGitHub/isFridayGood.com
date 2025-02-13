@@ -32,8 +32,8 @@
     async function instantiateManager():Promise<EditEventManager> {
         const thisEvent = await loadEvent(data.eventCode)
 
-        return new EditEventManager(thisEvent.eventData.code, 
-        thisEvent.eventData.name, 
+        return new EditEventManager(thisEvent.eventData.name, 
+        thisEvent.eventData.code, 
         thisEvent.availabilities.get("HOST")!,
         thisEvent.eventData.firstDate,
     ) 
@@ -78,7 +78,7 @@
                 goto(`/${data.eventCode}/results`)
             }
             else {
-                window.alert("Error! Failed to Edit Event!")
+                window.alert("You screwed up you fucking moron what the actual fuck - Ham Ham, 2025")
             }
 
             }} type="submit" class = "create-button">EDIT</button>
