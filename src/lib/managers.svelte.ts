@@ -77,8 +77,10 @@ class HostHighlighter implements Highlighter {
     constructor(inputAvailability?: boolean[][], firstDate?: Date) {
         if (inputAvailability != undefined && firstDate != undefined) {
             this.availabilityData.availability = inputAvailability;
+            this.availabilityData.firstDate = firstDate
         }else {
             this.availabilityData.availability = new Array<Array<boolean>>()
+            this.availabilityData.firstDate = new Date()
         }
         
     }
