@@ -66,7 +66,7 @@
 
             if (response.ok) {
                 const { eventCode } = await response.json()
-                goto(`./event-created/${eventCode}`)
+                goto(`/${eventCode}/event-created`)
             }else {
                 window.alert("Error: Failed to Create Event!")
             }
