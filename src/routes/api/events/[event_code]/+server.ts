@@ -64,7 +64,7 @@ export async function PUT( {request, params} ) {
     SET event_name = ${newEventData.title}
     WHERE event_code = ${params.event_code}`
 
-    const availabilitiesQueue: Availability[] = tableFormToDatabaseForm(newEventData.availabilities, newEventData.firstDate)
+    const availabilitiesQueue: Availability[] = tableFormToDatabaseForm(newEventData.availability, newEventData.firstDate)
     await updateUserAvailabilities(params.event_code, "HOST", availabilitiesQueue)
 
     return new Response("", {status: 201})
