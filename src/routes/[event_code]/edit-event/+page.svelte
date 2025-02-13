@@ -5,6 +5,7 @@
     import { onMount } from "svelte";
     import { loadEvent } from "$lib/utils";
     import type { PageData } from "./$types";
+    import { goto } from "$app/navigation";
 
     const { data }: { data: PageData } = $props()
     
@@ -70,7 +71,17 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {editEventManager.timezone} />
-        <button onclick={() => {window.location.href = "/event-created"}} type="submit" class = "create-button">SUBMIT</button>
+        <button onclick={ async () => {
+            const response = await editEventManager.editEvent()
+            
+            if (response.ok) {
+                goto(`/${data.eventCode}/results`)
+            }
+            else {
+                window.alert("Error! Failed to Edit Event!")
+            }
+
+            }} type="submit" class = "create-button">EDIT</button>
         <button class = "more-settings">
             <img src=/settings.svg alt = '⚙️'>
             <p>More Settings</p>

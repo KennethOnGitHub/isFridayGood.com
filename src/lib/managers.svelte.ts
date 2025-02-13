@@ -56,8 +56,16 @@ export class EditEventManager implements Manager{
     }
 
     async editEvent() {
-        //send request
-        console.log("afiashfiashfiashfa")
+        const response:Response = await fetch(`/api/events/${this.inviteCode}` , {
+            method: 'PUT',
+            body: JSON.stringify({ 
+                title: this.eventTitle,
+                availability: this.highlighter.availabilityData.availability,
+                firstDate: this.highlighter.availabilityData.firstDate.toISOString()
+                })
+        })
+
+        return response
     }
 }
 

@@ -1,6 +1,6 @@
-import { sql } from "../../../../db.server";
+import { sql, updateUserAvailabilities } from "../../../../db.server";
 import { checkEventExists } from "../../../../db.server";
-import type { UserData, WholeEvent } from "$lib/utils";
+import { tableFormToDatabaseForm, type Availability, type UserData, type WholeEvent } from "$lib/utils";
 import { json } from "@sveltejs/kit";
 
 export async function GET( { params }) {
@@ -51,4 +51,21 @@ export async function GET( { params }) {
     }
 
     return json(returnedResponse, {status: 200})
+}
+
+export async function PUT( {request, params} ) {
+    if (await checkEventExists(params.event_code) === false) { //Validate that event exists
+        throw Error("Event with code does not exist!")
+    }
+
+    const newEventData = await request.json()
+
+    await sql`UPDATE users
+    SET event_name = ${newEventData.title}
+    WHERE event_code = ${params.event_code}`
+
+    const availabilitiesQueue: Availability[] = tableFormToDatabaseForm(newEventData.availabilities, newEventData.firstDate)
+    await updateUserAvailabilities(params.event_code, "HOST", availabilitiesQueue)
+
+    return new Response("", {status: 201})
 }
