@@ -78,7 +78,7 @@
                 goto(`/${data.eventCode}/results`)
             }
             else {
-                window.alert("You screwed up you fucking moron what the actual fuck - Ham Ham, 2025")
+                window.alert("Error Editing Event")
             }
 
             }} type="submit" class = "create-button">EDIT</button>

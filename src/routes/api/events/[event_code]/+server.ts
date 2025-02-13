@@ -60,7 +60,7 @@ export async function PUT( {request, params} ) {
 
     const newEventData = await request.json()
 
-    await sql`UPDATE users
+    await sql`UPDATE events
     SET event_name = ${newEventData.title}
     WHERE event_code = ${params.event_code}`
 
