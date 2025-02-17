@@ -14,6 +14,8 @@
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
 
+        respondents = event.availabilities.keys().toArray()
+
         const hostAvailability = event.availabilities.get("HOST")
         if (hostAvailability !== undefined) {
             return new CreateResponseManager(event.eventData.code, event.eventData.name, event.eventData.firstDate, hostAvailability)
@@ -23,6 +25,8 @@
         }
     }
 
+    let displayDropDown:boolean = $state(false);
+    let respondents:string[] = []
 </script>
 
 {#await instantiateManager()}
@@ -33,9 +37,21 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><a href="">View Results</a></li>
+                <li><div>
+                    <button class = "dropdown-button" onclick={() => displayDropDown = !displayDropDown}>Edit Response</button> 
+                    {#if displayDropDown}
+                        
+                    <ul class = "dropdown-item-container">
+                        {#each respondents as respondent}
+                            <li>
+                                <a href = {`/${data.eventCode}/edit-response/${respondent}`}>{respondent} </a>
+                            </li>
+                        {/each}
+                    </ul>
+                    {/if}
+                </div></li>
                 |
-                <li><a href="">Edit this Event</a></li>
+                <li><a href= '/'>Create New Event</a></li>
             </ul>
         </nav>
 
@@ -69,10 +85,10 @@
             type="submit" 
             class = "create-button">SUBMIT</button>
         
-        <button class = "more-settings">
-            <img src=/edit_square.svg alt = '✏️'>
-            <p>Edit Submission</p>
-        </button>
+        <a class = "view-results" href={`/${data.eventCode}/results`}>
+            <img src=/tick_calendar.svg alt = '📅'>
+            <p>View Results</p>
+        </a>
     </div>
 </div>
 {/await}
@@ -105,6 +121,29 @@
     .subtitle {
         font-size: medium;
     }
+
+    .dropdown-button {
+        all: unset;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .dropdown-item-container {
+        display: flex;
+        position: absolute;
+        flex-direction: column;
+        background-color: white;
+        z-index: 100;
+
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dropdown-item-container li {
+        border: solid 1px #0000006f;
+    }
+
 
     @media screen and (max-width: 1000px) {
         .top {
@@ -149,16 +188,12 @@
         filter: none;
     }
 
-    .more-settings {
-        all: unset;
+    .view-results {
         display: flex;
         align-items: center;
-        cursor: pointer;
 
         justify-self: end;
-    }
-    .more-settings p {
-        text-decoration: underline;
+        color: black
     }
 </style>
 

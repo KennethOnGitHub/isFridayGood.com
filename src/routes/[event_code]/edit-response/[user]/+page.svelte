@@ -36,7 +36,7 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><a href="">View Results</a></li>
+                <li><a href={`/${data.eventCode}/results`}>View Results</a></li>
                 |
                 <li><a href="">Edit this Event</a></li>
             </ul>

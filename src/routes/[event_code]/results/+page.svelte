@@ -23,9 +23,11 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><a href="">Respond to Invite</a></li>
+                <li><a href="/">New Event</a> </li>
                 |
-                <li><a href="">Edit this Event</a></li>
+                <li><a href={`/${data.eventCode}/edit-response`}>Edit Response</a></li>
+                |
+                <li><a href={`/${data.eventCode}/edit-event`}>Edit this Event</a></li>
             </ul>
         </nav>
 
@@ -56,10 +58,10 @@
         <TimezoneSelect bind:userTimezone = {viewResultsManager.timezone} />
         <button onclick={() => {viewResultsManager.bookTime()}} type="submit" class = "create-button">SELECT TIME</button>
         
-        <button class = "more-settings">
-            <img src=/edit_square.svg alt = '✏️'>
-            <p>Edit Submission</p>
-        </button>
+        <a class = "add-response" href={`/${data.eventCode}`}>
+            <img src=/add_box_icon.svg alt = '+'>
+            <p>Add Response</p>
+        </a>
     </div>
 </div>
 {/await}
@@ -160,16 +162,12 @@
         filter: none;
     }
 
-    .more-settings {
-        all: unset;
+    .add-response {
         display: flex;
         align-items: center;
-        cursor: pointer;
 
         justify-self: end;
-    }
-    .more-settings p {
-        text-decoration: underline;
+        color: black
     }
 </style>
 

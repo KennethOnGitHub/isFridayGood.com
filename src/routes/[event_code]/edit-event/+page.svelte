@@ -35,8 +35,7 @@
         return new EditEventManager(thisEvent.eventData.name, 
         thisEvent.eventData.code, 
         thisEvent.availabilities.get("HOST")!,
-        thisEvent.eventData.firstDate,
-    ) 
+        thisEvent.eventData.firstDate) 
     }
 
 </script>
@@ -48,7 +47,7 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><a href="">View Results</a></li>
+                <li><a href={`/${data.eventCode}/results`}>View Results</a></li>
                 |
                 <li><a href="">Respond to an invite</a></li>
             </ul>
