@@ -6,6 +6,7 @@
 
     import type { PageData } from "./$types";
     import { loadEvent } from "$lib/utils";
+    import EditResponsesDropDown from "$lib/EditResponsesDropDown.svelte";
     const { data }: {data: PageData} = $props()
 
     async function instantiateManager(): Promise<ViewResultsManager>{
@@ -25,7 +26,7 @@
             <ul>
                 <li><a href="/">New Event</a> </li>
                 |
-                <li><a href={`/${data.eventCode}/edit-response`}>Edit Response</a></li>
+                <li><EditResponsesDropDown respondents = {viewResultsManager.highlighter.availabilityData.respondents} eventCode = {data.eventCode}/> </li>
                 |
                 <li><a href={`/${data.eventCode}/edit-event`}>Edit this Event</a></li>
             </ul>

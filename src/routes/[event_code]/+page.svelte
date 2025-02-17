@@ -10,6 +10,7 @@
     import Timetable from "$lib/timetable.svelte";
     import TimezoneSelect from "$lib/TimezoneSelect.svelte";
     import { goto } from "$app/navigation";
+    import EditResponsesDropDown from "$lib/EditResponsesDropDown.svelte";
 
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
@@ -25,7 +26,6 @@
         }
     }
 
-    let displayDropDown:boolean = $state(false);
     let respondents:string[] = []
 </script>
 
@@ -37,19 +37,7 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><div>
-                    <button class = "dropdown-button" onclick={() => displayDropDown = !displayDropDown}>Edit Response</button> 
-                    {#if displayDropDown}
-                        
-                    <ul class = "dropdown-item-container">
-                        {#each respondents as respondent}
-                            <li>
-                                <a href = {`/${data.eventCode}/edit-response/${respondent}`}>{respondent} </a>
-                            </li>
-                        {/each}
-                    </ul>
-                    {/if}
-                </div></li>
+                <li><EditResponsesDropDown {respondents} eventCode = {data.eventCode}/> </li>
                 |
                 <li><a href= '/'>Create New Event</a></li>
             </ul>
@@ -121,29 +109,6 @@
     .subtitle {
         font-size: medium;
     }
-
-    .dropdown-button {
-        all: unset;
-        cursor: pointer;
-        text-decoration: underline;
-    }
-
-    .dropdown-item-container {
-        display: flex;
-        position: absolute;
-        flex-direction: column;
-        background-color: white;
-        z-index: 100;
-
-        list-style-type: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .dropdown-item-container li {
-        border: solid 1px #0000006f;
-    }
-
 
     @media screen and (max-width: 1000px) {
         .top {
