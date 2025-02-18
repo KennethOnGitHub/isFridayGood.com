@@ -34,9 +34,24 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><a href="">View Results</a></li>
+                <li>
+                    <button class = "event-nav-button" onclick={() => {
+                        const eventCode = prompt("Enter Event Code")
+                        if (eventCode != null) {
+                            goto(`${eventCode}/results`)
+                        }
+                    }}>View An Event</button>
+                </li>
                 |
-                <li><a href="">Respond to an invite</a></li>
+                <li>
+                    <button class = "event-nav-button" onclick={() => {
+                        const eventCode = prompt("Enter Event Code")
+    
+                        if (eventCode != null) {
+                            goto(eventCode)
+                        }
+                    }}>Respond to Invite</button>
+                </li>
             </ul>
         </nav>
 
@@ -121,6 +136,12 @@
         font-size:medium;
     }
 
+    .event-nav-button {
+        all: unset;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
     @media screen and (max-width: 1000px) {
         .top {
             grid-template-areas: 'nav'
@@ -142,9 +163,6 @@
         list-style: none;
     }
 
-    li a {
-        color: black;
-    }
 
     .event-title input {
         box-sizing: content-box;
