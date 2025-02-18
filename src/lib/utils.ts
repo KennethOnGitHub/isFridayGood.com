@@ -12,7 +12,7 @@ export interface EventData {
     code: string,
     name: string,
     firstDate: Date,
-    selectedTime: Date,
+    selectedTime?: Date,
 }
 
 export interface WholeEvent {
@@ -41,6 +41,10 @@ export async function loadEvent(event_code: string): Promise<EventViewModel> {
     } )
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
     wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0) //Sets time to midnight
+
+    if (wholeEvent.eventData.selectedTime) {
+        wholeEvent.eventData.selectedTime = new Date(wholeEvent.eventData.selectedTime)
+    }
     
     const availabilitiesTables = new Map<string, boolean[][]>()
     wholeEvent.userDatas.forEach(userData => {

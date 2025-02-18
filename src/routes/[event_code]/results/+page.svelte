@@ -12,14 +12,25 @@
     async function instantiateManager(): Promise<ViewResultsManager>{
         const event = await loadEvent(data.eventCode)
 
+        bookedTime = event.eventData.selectedTime
+
         return new ViewResultsManager(event)
     }
+
+    let bookedTime:Date|undefined = $state()
+    let displayBookedScreen:boolean = $derived(bookedTime != undefined)//NOT DERIVED, it can change independently of bookedTime
 </script>
 
 
 {#await instantiateManager()}
     <p>Loading...</p>
 {:then viewResultsManager} 
+{#if displayBookedScreen}
+    <div>
+        <h1>We're meeting up at {bookedTime}</h1>
+        <button>See Results</button>
+    </div>
+{:else }
 <div class = "page">
     <div class = "top">
         <nav>
@@ -65,6 +76,7 @@
         </a>
     </div>
 </div>
+{/if}
 {/await}
 
 

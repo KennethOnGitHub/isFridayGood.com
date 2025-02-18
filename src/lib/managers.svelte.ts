@@ -1,5 +1,5 @@
 import * as settings from "$lib/settings"
-import  { type EventViewModel, MILLISECONDS_IN_SECOND, MILLISECONDS_PER_TIME_SLOT, SECONDS_PER_MINUTE, TIME_SLOTS_PER_DAY,  } from "./utils";
+import  { dateTimeToArrayCoordinates, type EventViewModel, MILLISECONDS_IN_SECOND, MILLISECONDS_PER_TIME_SLOT, SECONDS_PER_MINUTE, TIME_SLOTS_PER_DAY,  } from "./utils";
 
 export interface Manager {
     timezone: number,
@@ -223,7 +223,7 @@ export class ViewResultsManager implements Manager {
         this.eventTitle = event.eventData.name
         this.inviteCode = event.eventData.code
 
-        this.highlighter = new ResultsHighlighter(event.availabilities, event.eventData.firstDate)
+        this.highlighter = new ResultsHighlighter(event.availabilities, event.eventData.firstDate, event.eventData.selectedTime)
     }
 
     async bookTime() {
@@ -251,9 +251,13 @@ class ResultsHighlighter implements Highlighter {
     availableAttendees: number[] = $state([])
 
 
-    constructor(inputAvailabilities: Map<string, boolean[][]>, firstDate: Date) {
+    constructor(inputAvailabilities: Map<string, boolean[][]>, firstDate: Date, selectedTime?: Date) {
 
         this.availabilityData.firstDate = firstDate
+        if (selectedTime) {
+            this.confirmedTime = dateTimeToArrayCoordinates(selectedTime, firstDate) //IMPLEMENT SUGGESTING TIMES
+        }
+        
 
         // const availabilitiesColumnCount = Math.max(...[...availabilities.values()].map(table => table.length)) //utterly unreadable!
 
@@ -282,6 +286,7 @@ class ResultsHighlighter implements Highlighter {
 
     getSlotStyle(column: number, row: number): string {
         let style = "";
+
         if (this.confirmedTime.column == column && this.confirmedTime.row == row) {
             style += "text-decoration: underline; font-weight: bold;"
         }
