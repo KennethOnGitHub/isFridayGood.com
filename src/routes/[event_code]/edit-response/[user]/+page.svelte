@@ -35,11 +35,7 @@
 <div class = "page">
     <div class = "top">
         <nav>
-            <ul>
-                <li><a href={`/${data.eventCode}/results`}>View Results</a></li>
-                |
-                <li><a href="">Edit this Event</a></li>
-            </ul>
+            <a href={`/${data.eventCode}/results`}>View Results</a>
         </nav>
 
         <div class = "event-title">
@@ -65,10 +61,10 @@
 
             }} type="submit" class = "create-button">EDIT</button>
         
-        <button class = "more-settings">
-            <img src=/edit_square.svg alt = '✏️'>
-            <p>Edit Submission</p>
-        </button>
+        <a class = "add-response" href={`/${data.eventCode}`}>
+            <img src=/add_box_icon.svg alt = '+'>
+            <p>Add Response</p>
+        </a>
     </div>
 </div>
 
@@ -90,6 +86,11 @@
     nav {
         grid-area: nav;
     }
+    nav a {
+        color: black;
+    }
+
+
     .event-title {
         grid-area: title;
 
@@ -119,15 +120,6 @@
         }
     }
 
-    ul{
-        display: flex;
-        list-style: none;
-    }
-
-    li a {
-        color: black;
-    }
-
     .bottom {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -146,16 +138,12 @@
         filter: none;
     }
 
-    .more-settings {
-        all: unset;
+    .add-response {
         display: flex;
         align-items: center;
-        cursor: pointer;
 
         justify-self: end;
-    }
-    .more-settings p {
-        text-decoration: underline;
+        color: black
     }
 </style>
 
