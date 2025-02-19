@@ -12,23 +12,25 @@
     async function instantiateManager(): Promise<ViewResultsManager>{
         const event = await loadEvent(data.eventCode)
 
-        bookedTime = event.eventData.selectedTime
+        if (event.eventData.selectedTime) {
+            selectedTime = event.eventData.selectedTime
+        }
 
         return new ViewResultsManager(event)
     }
 
-    let bookedTime:Date|undefined = $state()
-    let displayBookedScreen:boolean = $derived(bookedTime != undefined)//NOT DERIVED, it can change independently of bookedTime
+    let selectedTime: Date = $state(new Date())
 </script>
 
 
 {#await instantiateManager()}
     <p>Loading...</p>
 {:then viewResultsManager} 
-{#if displayBookedScreen}
-    <div>
-        <h1>We're meeting up at {bookedTime}</h1>
-        <button>See Results</button>
+{#if viewResultsManager.displayBookedScreen}
+    <div class = "display-booked">
+        <h2>We're meeting up at </h2>
+        <h1>{selectedTime.toLocaleString("en-GB", {dateStyle: "full", timeStyle: "long"})}</h1>
+        <button onclick={() => viewResultsManager.displayBookedScreen = false}>See Results</button>
     </div>
 {:else }
 <div class = "page">
@@ -81,6 +83,21 @@
 
 
 <style>
+    div.display-booked {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .display-booked button {
+        all: unset;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+
     div.page {
         padding: 1rem; 
         display: grid;

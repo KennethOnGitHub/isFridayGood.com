@@ -217,11 +217,13 @@ export class ViewResultsManager implements Manager {
     eventTitle: string;
     highlighter: ResultsHighlighter;
     inviteCode: string
+    displayBookedScreen: boolean = $state(false)
 
     constructor(event: EventViewModel) {
         this.timezone = 0; 
         this.eventTitle = event.eventData.name
         this.inviteCode = event.eventData.code
+        this.displayBookedScreen = (event.eventData.selectedTime != null)
 
         this.highlighter = new ResultsHighlighter(event.availabilities, event.eventData.firstDate, event.eventData.selectedTime)
     }
@@ -233,10 +235,12 @@ export class ViewResultsManager implements Manager {
         const bookedDateTime: Date = new Date(this.highlighter.availabilityData.firstDate.getTime() + timeAfterFirstDate)
 
 
-        fetch(`/api/events/${this.inviteCode}/select-time`, {
+        await fetch(`/api/events/${this.inviteCode}/select-time`, {
             method: 'PUT',
             body: JSON.stringify({bookedTime: bookedDateTime})
             })
+        
+        location.reload()
     }   
 }
 

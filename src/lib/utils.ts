@@ -42,6 +42,7 @@ export async function loadEvent(event_code: string): Promise<EventViewModel> {
     wholeEvent.eventData.firstDate = new Date(wholeEvent.eventData.firstDate)
     wholeEvent.eventData.firstDate.setHours(0, 0, 0, 0) //Sets time to midnight
 
+    console.log(wholeEvent.eventData.selectedTime)
     if (wholeEvent.eventData.selectedTime) {
         wholeEvent.eventData.selectedTime = new Date(wholeEvent.eventData.selectedTime)
     }
