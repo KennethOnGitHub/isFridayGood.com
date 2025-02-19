@@ -240,7 +240,8 @@ export class ViewResultsManager implements Manager {
             body: JSON.stringify({bookedTime: bookedDateTime})
             })
         
-        location.reload()
+        location.reload()//This is slightly messy as we are reloading the WHOLE page, however, it keeps the system simple and prevents bugs.
+        //It also hurts less in the event of a race condition
     }   
 }
 
@@ -258,11 +259,7 @@ class ResultsHighlighter implements Highlighter {
     constructor(inputAvailabilities: Map<string, boolean[][]>, firstDate: Date, selectedTime?: Date) {
 
         this.availabilityData.firstDate = firstDate
-        if (selectedTime) {
-            this.confirmedTime = dateTimeToArrayCoordinates(selectedTime, firstDate) //IMPLEMENT SUGGESTING TIMES
-        }
         
-
         // const availabilitiesColumnCount = Math.max(...[...availabilities.values()].map(table => table.length)) //utterly unreadable!
 
         //Makes the 3D array the right size
@@ -270,14 +267,13 @@ class ResultsHighlighter implements Highlighter {
         const largestAvailabilityTableSize:number = Math.max(...inputAvailabilitiesLengths)
         this.availabilityData.availabilities = new Array(largestAvailabilityTableSize).fill(new Array(48).fill([]))
 
-
         const usernames = [...inputAvailabilities.keys()]
         //Inserts each users availabilities into the 3D array
         for (let userId = 0; userId < usernames.length; userId++) {
             const curUsername = usernames[userId]
             const curUsersAvailabilities = inputAvailabilities.get(curUsername)!
             this.availabilityData.respondents.push(curUsername)
-
+            
             for (let column = 0; column < curUsersAvailabilities.length; column++) {
                 for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
                     if (curUsersAvailabilities[column][row] == true) {
@@ -286,6 +282,24 @@ class ResultsHighlighter implements Highlighter {
                 }
             }
         }
+
+        if (selectedTime) {
+            this.confirmedTime = dateTimeToArrayCoordinates(selectedTime, firstDate) //IMPLEMENT SUGGESTING TIMES
+        }else {
+            //Finds the time slot where the most people are free
+            let largest = -999
+            const currentTime = dateTimeToArrayCoordinates(new Date(), firstDate)
+
+            for (let column = currentTime.column; column < this.availabilityData.availabilities.length; column++) {
+                for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
+                    if (this.availabilityData.availabilities[column][row].length > largest) {
+                        this.confirmedTime = {column, row}
+                        largest = this.availabilityData.availabilities[column][row].length
+                    }
+                }
+            }
+        }
+
     }
 
     getSlotStyle(column: number, row: number): string {
