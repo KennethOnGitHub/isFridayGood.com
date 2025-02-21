@@ -15,7 +15,7 @@
     async function instantiateManager(): Promise<CreateResponseManager>{
         const event = await loadEvent(data.eventCode)
 
-        respondents = event.availabilities.keys().toArray()
+        respondents = [...event.availabilities.keys()]
 
         const hostAvailability = event.availabilities.get("HOST")
         if (hostAvailability !== undefined) {
@@ -37,7 +37,7 @@
     <div class = "top">
         <nav>
             <ul>
-                <!-- <li><EditResponsesDropDown {respondents} eventCode = {data.eventCode}/> </li> -->
+                <li><EditResponsesDropDown {respondents} eventCode = {data.eventCode}/> </li>
                 |
                 <li><a href= '/'>Create New Event</a></li>
             </ul>
