@@ -37,7 +37,7 @@
     <div class = "top">
         <nav>
             <ul>
-                <li><EditResponsesDropDown {respondents} eventCode = {data.eventCode}/> </li>
+                <!-- <li><EditResponsesDropDown {respondents} eventCode = {data.eventCode}/> </li> -->
                 |
                 <li><a href= '/'>Create New Event</a></li>
             </ul>
