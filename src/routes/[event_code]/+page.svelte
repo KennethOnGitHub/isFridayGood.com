@@ -26,7 +26,7 @@
         }
     }
 
-    let respondents:string[] = []
+    let respondents:string[] = $state([])
 </script>
 
 {#await instantiateManager()}
