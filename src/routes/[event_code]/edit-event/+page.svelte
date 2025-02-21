@@ -89,7 +89,7 @@
         display: grid;
         grid-template-rows: 60px 1fr 60px;
 
-        height: 100vh;
+        height: 100dvh;
     }
 
     .top {

@@ -90,7 +90,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        height: 100vh;
+        height: 100dvh;
     }
 
     .display-booked button {
@@ -111,7 +111,7 @@
         /* this is so hacky lol */
         "bottom bottom";
 
-        height: 100vh;
+        height: 100dvh;
     }
 
     .top {
