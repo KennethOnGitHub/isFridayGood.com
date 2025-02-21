@@ -230,8 +230,13 @@ export class ViewResultsManager implements Manager {
 
     async bookTime() {
 
+        if (this.highlighter.confirmedTime === undefined){
+            throw new Error("There is no confirmed time")
+        }
+
         const timeSlotsAfterFirstDate = (this.highlighter.confirmedTime.column * TIME_SLOTS_PER_DAY) + this.highlighter.confirmedTime.row
         const timeAfterFirstDate = timeSlotsAfterFirstDate * MILLISECONDS_PER_TIME_SLOT
+        
         const bookedDateTime: Date = new Date(this.highlighter.availabilityData.firstDate.getTime() + timeAfterFirstDate)
 
 
@@ -252,7 +257,7 @@ class ResultsHighlighter implements Highlighter {
         respondents: [],
     });
     selectedRespondentID?: number = $state(undefined);
-    confirmedTime: {column: number, row: number} = $state({column: 0, row: 0});
+    confirmedTime?: {column: number, row: number} = $state();
     availableAttendees: number[] = $state([])
 
 
@@ -284,10 +289,10 @@ class ResultsHighlighter implements Highlighter {
         }
 
         if (selectedTime) {
-            this.confirmedTime = dateTimeToArrayCoordinates(selectedTime, firstDate) //IMPLEMENT SUGGESTING TIMES
+            this.confirmedTime = dateTimeToArrayCoordinates(selectedTime, firstDate)
         }else {
             //Finds the time slot where the most people are free
-            let largest = -999
+            let largest = 0
             const currentTime = dateTimeToArrayCoordinates(new Date(), firstDate)
 
             for (let column = currentTime.column; column < this.availabilityData.availabilities.length; column++) {
@@ -305,8 +310,10 @@ class ResultsHighlighter implements Highlighter {
     getSlotStyle(column: number, row: number): string {
         let style = "";
 
-        if (this.confirmedTime.column == column && this.confirmedTime.row == row) {
-            style += "text-decoration: underline; font-weight: bold;"
+        if (this.confirmedTime) {
+            if (this.confirmedTime.column == column && this.confirmedTime.row == row) {
+                style += "text-decoration: underline; font-weight: bold;"
+            }
         }
 
         const outOfRange:boolean = column >= this.availabilityData.availabilities.length; 

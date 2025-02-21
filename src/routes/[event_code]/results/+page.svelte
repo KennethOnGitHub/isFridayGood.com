@@ -33,6 +33,7 @@
         <button onclick={() => viewResultsManager.displayBookedScreen = false}>See Results</button>
     </div>
 {:else }
+<!-- Results Page With Timetable -->
 <div class = "page">
     <div class = "top">
         <nav>
@@ -70,7 +71,8 @@
 
     <div class = "bottom">
         <TimezoneSelect bind:userTimezone = {viewResultsManager.timezone} />
-        <button onclick={() => {viewResultsManager.bookTime()}} type="submit" class = "create-button">SELECT TIME</button>
+        <button onclick={() => {viewResultsManager.bookTime().catch((e) => {window.alert(e)})}}
+            type="submit" class = "create-button">SELECT TIME</button>
         
         <a class = "add-response" href={`/${data.eventCode}`}>
             <img src=/add_box_icon.svg alt = '+'>
