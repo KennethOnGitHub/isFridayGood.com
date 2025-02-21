@@ -101,7 +101,7 @@
         display: grid;
         grid-template-rows: 70px 1fr 60px;
 
-        height: 100vh;
+        height: 100dvh;
     }
 
     .top {
