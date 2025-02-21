@@ -88,10 +88,6 @@
         }} 
         type="submit" 
         class = "create-button">CREATE</button>
-        <button class = "more-settings">
-            <img src=/settings.svg alt = '⚙️'>
-            <p>More Settings</p>
-        </button>
     </div>
 </div>
 
@@ -185,18 +181,6 @@
     .create-button:active {
         transform: translate(1px, 2px);
         filter: none;
-    }
-
-    .more-settings {
-        all: unset;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-
-        justify-self: end;
-    }
-    .more-settings p {
-        text-decoration: underline;
     }
 </style>
 
