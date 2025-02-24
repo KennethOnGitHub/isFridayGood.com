@@ -279,6 +279,7 @@ class ResultsHighlighter implements Highlighter {
             const curUsersAvailabilities = inputAvailabilities.get(curUsername)!
             this.availabilityData.respondents.push(curUsername)
             
+            //iterates through the 2D array, adding the user's ID if they are free at that time
             for (let column = 0; column < curUsersAvailabilities.length; column++) {
                 for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
                     if (curUsersAvailabilities[column][row] == true) {
