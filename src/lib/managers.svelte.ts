@@ -234,6 +234,7 @@ export class ViewResultsManager implements Manager {
             throw new Error("There is no confirmed time")
         }
 
+        //Translates the coordinate into a date object. Server does not work with array coordinates and times.
         const timeSlotsAfterFirstDate = (this.highlighter.confirmedTime.column * TIME_SLOTS_PER_DAY) + this.highlighter.confirmedTime.row
         const timeAfterFirstDate = timeSlotsAfterFirstDate * MILLISECONDS_PER_TIME_SLOT
         
@@ -279,7 +280,7 @@ class ResultsHighlighter implements Highlighter {
             const curUsersAvailabilities = inputAvailabilities.get(curUsername)!
             this.availabilityData.respondents.push(curUsername)
             
-            //iterates through the 2D array, adding the user's ID if they are free at that time
+        //iterates through the 2D array, adding the user's ID if they are free at that time
             for (let column = 0; column < curUsersAvailabilities.length; column++) {
                 for (let row = 0; row < TIME_SLOTS_PER_DAY; row++) {
                     if (curUsersAvailabilities[column][row] == true) {
